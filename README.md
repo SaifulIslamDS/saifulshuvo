@@ -1,130 +1,82 @@
 # Saiful Islam Portfolio
 
-A responsive Next.js portfolio UI for Saiful Islam, positioned around data analytics, web application development, SaaS product work and practical AI-assisted solutions.
+A mobile-responsive personal portfolio and single-owner CMS foundation built with Next.js, TypeScript, Supabase and Netlify.
 
 ## Current release
 
-`v0.2.0 — Real Portfolio Content Integration`
+**v0.3.0 — CMS Foundation**
 
-## Technology
+This release adds Google-only admin authentication, a single-admin allow-list, protected admin routes, Supabase SSR session handling, PostgreSQL content tables, Row Level Security policies and initial portfolio seed data. Project, post, skill and settings forms remain UI previews until their CRUD milestones.
+
+## Stack
 
 - Next.js 16 App Router
-- React 19
-- TypeScript
-- Custom responsive CSS
-- pnpm 11
+- React 19 and TypeScript
+- Supabase Auth and PostgreSQL
+- Supabase SSR cookie sessions
 - Netlify deployment
+- pnpm 11
 
-No database, authentication or CMS backend is connected yet.
-
-## v0.2.0 highlights
-
-- Real professional positioning and contact information
-- Expanded analytics, development, AI, business and creative skills
-- Eight detailed project case-study routes
-- Verified external links where available
-- Responsive icon-only light/dark theme toggle
-- Theme preference persistence
-- Mobile and desktop navigation support
-- CMS-style admin UI preview
-
-## Routes
-
-```text
-/
-├── /projects
-├── /projects/[slug]
-├── /blog
-├── /contact
-└── /admin
-    ├── /admin/projects
-    ├── /admin/posts
-    ├── /admin/skills
-    └── /admin/settings
-```
-
-## Requirements
-
-- Node.js 22
-- pnpm 11.18.0
-
-The repository includes:
-
-```text
-.nvmrc
-package.json
-pnpm-workspace.yaml
-netlify.toml
-```
-
-The pnpm workspace configuration keeps the minimum-release-age security policy and explicitly approves the trusted `sharp` build script required by the Next.js image toolchain.
-
-## Local development
+## Local setup
 
 ```powershell
 nvm use 22.23.2
 corepack enable
 corepack prepare pnpm@11.18.0 --activate
 pnpm install
+Copy-Item .env.example .env.local
 pnpm typecheck
 pnpm build
 pnpm dev
 ```
 
-Open:
+Complete the Supabase and Google OAuth configuration before opening `/admin`.
+
+## Documentation
+
+All project documentation except this root README is kept in [`docs/`](./docs/README.md).
+
+Start with:
+
+1. [`docs/UPGRADE-v0.3.0.md`](./docs/UPGRADE-v0.3.0.md)
+2. [`docs/SUPABASE-SETUP.md`](./docs/SUPABASE-SETUP.md)
+3. [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)
+4. [`docs/SECURITY.md`](./docs/SECURITY.md)
+5. [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md)
+
+## Important routes
 
 ```text
-http://localhost:3000
+/
+/projects
+/blog
+/contact
+/admin/login
+/admin
+/admin/projects
+/admin/posts
+/admin/skills
+/admin/settings
+/auth/callback
 ```
 
-## Upgrading an existing v0.1.0 repository
+## Release boundary
 
-Extract the v0.2.0 patch and copy its files into the existing repository root. Keep your existing `.git/` directory and `pnpm-lock.yaml`.
+Implemented in v0.3.0:
 
-Then run:
+- Google OAuth login
+- Server-verified admin session
+- Server-side email allow-list
+- Protected admin route group
+- Sign-out flow
+- Supabase SSR clients and Next.js proxy
+- CMS database migration, RLS and seed data
+- Configuration-safe public build
 
-```powershell
-pnpm install
-pnpm typecheck
-pnpm build
-```
+Deferred:
 
-## Netlify
-
-Recommended settings:
-
-```text
-Base directory:       [blank]
-Build command:        pnpm build
-Publish directory:    .next
-Production branch:    main
-```
-
-The same values are declared in `netlify.toml`.
-
-## Theme behavior
-
-- First visit: follows the device light/dark preference
-- Later visits: uses the visitor's saved choice
-- Toggle: icon-only control beside the main navigation actions
-- Mobile: the same toggle remains visible beside the menu button
-
-## Current limitations
-
-- `/admin` is a visual preview only
-- Contact form does not submit
-- Project screenshots are placeholders
-- Blog content is not published
-- CV is not stored yet; the current control opens an email request
-- Content is still maintained in `src/data/portfolio.ts`
-
-## Planned next milestone
-
-`v0.3.0 — CMS Foundation`
-
-- Supabase project and schema
-- Google authentication
-- Owner-only admin access
-- Protected `/admin`
-- CMS-managed profile, skills and projects
-- Row Level Security
+- Project CRUD
+- Post editor persistence
+- Skill and settings persistence
+- Media library and CV storage
+- Contact-form persistence

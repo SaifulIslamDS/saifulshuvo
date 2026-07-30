@@ -42,7 +42,7 @@ export function SiteFooter() {
       </div>
       <div className="container footer-bottom">
         <span>© {new Date().getFullYear()} Saiful Islam. All rights reserved.</span>
-        <span>v0.2.0 · Real Portfolio Content Integration</span>
+        <span>v0.3.0 · CMS Foundation</span>
       </div>
     </footer>
   );

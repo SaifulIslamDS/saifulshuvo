@@ -7,17 +7,17 @@ export default function AdminDashboardPage() {
     ["Projects", projects.length.toString(), "+2 this quarter", "folder"],
     ["Published posts", "0", `${articles.length} drafts prepared`, "file"],
     ["Skills", skillGroups.reduce((sum, group) => sum + group.skills.length, 0).toString(), "Across 6 categories", "layers"],
-    ["Profile completion", "88%", "Add CV and profile photo", "user"],
+    ["Security status", "Protected", "Google OAuth + allow-list", "shield"],
   ];
 
   return (
     <>
       <div className="admin-page-head">
-        <div><span className="eyebrow">Overview</span><h1>Good evening, Saiful</h1><p>Manage the future portfolio content from one clean workspace.</p></div>
+        <div><span className="eyebrow">Overview</span><h1>Welcome back, Saiful</h1><p>Your admin session is protected. Content CRUD will be connected incrementally from this foundation.</p></div>
         <div className="admin-actions"><button className="button button-secondary"><Icon name="eye" size={17}/> Preview</button><button className="button button-primary"><Icon name="plus" size={17}/> New project</button></div>
       </div>
 
-      <div className="admin-notice"><Icon name="spark" size={21}/><div><strong>This is the UI foundation.</strong><p>Authentication, database, media uploads, drafts and publishing will be connected in the CMS phase.</p></div></div>
+      <div className="admin-notice"><Icon name="spark" size={21}/><div><strong>CMS foundation is active.</strong><p>Google-only authentication, protected admin routing, database schema and RLS policies are now prepared. Project and post CRUD remain the next milestones.</p></div></div>
 
       <div className="admin-stat-grid">
         {cards.map(([label, value, note, icon]) => <article key={label}><span className="icon-box"><Icon name={icon} size={21}/></span><div><small>{label}</small><strong>{value}</strong><span>{note}</span></div></article>)}
