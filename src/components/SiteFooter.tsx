@@ -8,11 +8,11 @@ export function SiteFooter() {
         <div>
           <Link href="/" className="brand footer-brand">
             <span className="brand-mark">SI</span>
-            <span><strong>Saiful Islam</strong><small>Building useful digital solutions</small></span>
+            <span><strong>Saiful Islam</strong><small>Data · AI · Web Products</small></span>
           </Link>
           <p className="footer-copy">
-            A data-focused professional and software builder combining analytics,
-            business knowledge and modern web technologies.
+            A data analyst, web developer and SaaS builder combining business understanding,
+            analytics and modern application development to create practical solutions.
           </p>
         </div>
         <div>
@@ -30,18 +30,19 @@ export function SiteFooter() {
           <a href="https://www.linkedin.com/in/saifulislampro" target="_blank" rel="noreferrer">
             <Icon name="linkedin" size={16} /> LinkedIn
           </a>
-          <Link href="/contact"><Icon name="mail" size={16} /> Contact</Link>
+          <a href="mailto:mail@saifulshuvo.com"><Icon name="mail" size={16} /> Email</a>
         </div>
         <div>
-          <h3>Site</h3>
+          <h3>Availability</h3>
+          <span>Dhaka, Bangladesh</span>
+          <span>Remote worldwide</span>
+          <span>Data · BI · Web · SaaS</span>
           <Link href="/admin">Admin UI Preview</Link>
-          <span>Bangladesh</span>
-          <span>Available for remote opportunities</span>
         </div>
       </div>
       <div className="container footer-bottom">
         <span>© {new Date().getFullYear()} Saiful Islam. All rights reserved.</span>
-        <span>Designed for a future CMS-powered portfolio.</span>
+        <span>v0.2.0 · Real Portfolio Content Integration</span>
       </div>
     </footer>
   );

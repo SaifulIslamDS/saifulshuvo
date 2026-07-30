@@ -24,6 +24,8 @@ const paths: Record<string, ReactNode> = {
   check: <path d="m5 12 4 4L19 6" />,
   menu: <path d="M4 6h16M4 12h16M4 18h16" />,
   close: <path d="m6 6 12 12M18 6 6 18" />,
+  sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></>,
+  moon: <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z" />,
   external: <><path d="M15 3h6v6M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></>,
   folder: <><path d="M3 6h6l2 2h10v11H3z"/></>,
   file: <><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5"/></>,

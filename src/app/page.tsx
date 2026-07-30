@@ -5,7 +5,13 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { primarySkills, projects, services, skillGroups } from "@/data/portfolio";
+import {
+  experienceHighlights,
+  primarySkills,
+  projects,
+  services,
+  skillGroups,
+} from "@/data/portfolio";
 
 const featured = projects.filter((project) => project.featured);
 
@@ -19,32 +25,34 @@ export default function HomePage() {
           <div className="hero-orb hero-orb-two" />
           <div className="container hero-grid">
             <div className="hero-copy">
-              <div className="availability"><span /> Available for remote opportunities</div>
-              <p className="hero-kicker">DATA ANALYTICS · AI · WEB PRODUCTS</p>
+              <div className="availability"><span /> Open to remote opportunities</div>
+              <p className="hero-kicker">DATA ANALYTICS · WEB APPLICATIONS · APPLIED AI</p>
               <h1>
-                Turning data and ideas into <span>intelligent solutions.</span>
+                Turning business problems into <span>useful digital solutions.</span>
               </h1>
+              <p className="hero-role">Data Analyst &amp; AI-Focused Software Builder</p>
               <p className="hero-lead">
-                I combine analytical thinking, business experience and modern web technologies
-                to build dashboards, digital products and practical AI-assisted workflows.
+                I combine 13+ years of professional experience, 7+ years of website development,
+                business understanding and modern data technologies to create dashboards,
+                applications and practical AI-assisted workflows.
               </p>
               <div className="hero-actions">
                 <Link href="/projects" className="button button-primary">
                   Explore my work <Icon name="arrow" size={18} />
                 </Link>
                 <Link href="/contact" className="button button-secondary">
-                  Let&apos;s connect
+                  Discuss an opportunity
                 </Link>
               </div>
               <div className="hero-socials">
-                <span>Find me on</span>
+                <span>Connect</span>
                 <a href="https://github.com/SaifulIslamDS" target="_blank" rel="noreferrer" aria-label="GitHub">
                   <Icon name="github" />
                 </a>
                 <a href="https://www.linkedin.com/in/saifulislampro" target="_blank" rel="noreferrer" aria-label="LinkedIn">
                   <Icon name="linkedin" />
                 </a>
-                <Link href="/contact" aria-label="Contact"><Icon name="mail" /></Link>
+                <a href="mailto:mail@saifulshuvo.com" aria-label="Email Saiful Islam"><Icon name="mail" /></a>
               </div>
             </div>
 
@@ -59,9 +67,9 @@ export default function HomePage() {
 
           <div className="container trust-strip">
             <div><strong>13+</strong><span>Years of professional experience</span></div>
-            <div><strong>4</strong><span>Analytics portfolio projects</span></div>
-            <div><strong>7+</strong><span>Product and application initiatives</span></div>
-            <div><strong>∞</strong><span>Commitment to continuous learning</span></div>
+            <div><strong>7+</strong><span>Years in website development</span></div>
+            <div><strong>4</strong><span>End-to-end analytics projects</span></div>
+            <div><strong>8+</strong><span>Software and product initiatives</span></div>
           </div>
         </section>
 
@@ -70,41 +78,62 @@ export default function HomePage() {
             <div>
               <SectionHeading
                 eyebrow="About me"
-                title="A multidisciplinary professional moving deeper into data and AI."
-                description="My strength is not only knowing tools. It is connecting business needs, data, people and technology to create practical outcomes."
+                title="A multidisciplinary professional moving deeper into data and intelligent systems."
+                description="My advantage is not a single tool. It is the ability to connect business processes, data, users and technology to create practical outcomes."
               />
               <div className="about-copy">
                 <p>
-                  I work across data analytics, web development, project management, business operations,
-                  accounting, digital marketing and AI-assisted product development. That broad foundation
-                  helps me understand problems from both technical and operational perspectives.
+                  I began my development journey with HTML, CSS, JavaScript, PHP and WordPress,
+                  delivering responsive websites, customisation and digital work for local and
+                  international clients. Today, I build modern application interfaces with React,
+                  Next.js, TypeScript, Node.js, Supabase and PostgreSQL.
                 </p>
                 <p>
-                  My current career direction is focused on Data Analytics, Data Science, Data Engineering,
-                  Machine Learning, Deep Learning, LLMs and Agentic AI—with the goal of contributing to
-                  international remote teams and building useful software products.
+                  Alongside development, I am building a professional analytics portfolio with Excel,
+                  Power BI, SQL and Python. My career direction is toward Data Analytics, Data Science,
+                  Data Engineering, Machine Learning, Deep Learning, LLMs and Agentic AI, with a focus
+                  on international remote teams and business-oriented technology products.
                 </p>
               </div>
               <div className="about-actions">
-                <Link href="/projects" className="text-link">See my project journey <Icon name="arrow" size={17} /></Link>
+                <Link href="/projects" className="text-link">Explore the project journey <Icon name="arrow" size={17} /></Link>
               </div>
             </div>
             <div className="focus-card">
-              <span className="eyebrow">Career focus</span>
-              <h3>From business systems to intelligent systems</h3>
+              <span className="eyebrow">Professional positioning</span>
+              <h3>Business-aware data and software execution</h3>
               <ul className="check-list">
-                <li><Icon name="check" size={17} /> Build decision-ready analytics</li>
-                <li><Icon name="check" size={17} /> Develop production-quality web applications</li>
-                <li><Icon name="check" size={17} /> Apply LLMs to real workflows</li>
-                <li><Icon name="check" size={17} /> Grow toward ML, data engineering and agentic AI</li>
+                <li><Icon name="check" size={17} /> Analyse data and communicate decisions clearly</li>
+                <li><Icon name="check" size={17} /> Build responsive, maintainable web applications</li>
+                <li><Icon name="check" size={17} /> Translate workflows into structured digital products</li>
+                <li><Icon name="check" size={17} /> Apply LLMs and AI tools responsibly to real work</li>
               </ul>
               <div className="focus-roadmap">
-                <span className="active">Now<br/><b>Analytics</b></span>
+                <span className="active">Current<br/><b>Analytics &amp; Apps</b></span>
                 <i />
-                <span>Next<br/><b>Data Science</b></span>
+                <span>Expanding<br/><b>Data &amp; ML</b></span>
                 <i />
-                <span>Future<br/><b>AI Systems</b></span>
+                <span>Direction<br/><b>Intelligent Systems</b></span>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="section-shell experience-section">
+          <div className="container">
+            <SectionHeading
+              eyebrow="Professional foundation"
+              title="Experience that connects operations, clients, data and technology"
+              description="My current technical direction is supported by years of practical work, business exposure, client service and continuous self-directed learning."
+            />
+            <div className="experience-grid">
+              {experienceHighlights.map((item) => (
+                <article className="experience-card" key={item.title}>
+                  <span>{item.period}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
@@ -112,9 +141,9 @@ export default function HomePage() {
         <section className="section-shell services-section">
           <div className="container">
             <SectionHeading
-              eyebrow="What I do"
-              title="Business-aware technology services"
-              description="A combination of analytical, development and operational skills for projects that need more than one narrow perspective."
+              eyebrow="What I can contribute"
+              title="Business-aware technology capabilities"
+              description="A practical combination of analytics, development, WordPress, operations and AI-assisted execution for roles and projects that cross traditional boundaries."
               centered
             />
             <div className="service-grid">
@@ -132,9 +161,9 @@ export default function HomePage() {
         <section id="skills" className="section-shell skills-section">
           <div className="container">
             <SectionHeading
-              eyebrow="Capabilities"
-              title="A broad toolkit with a focused direction"
-              description="The primary stack highlights my current portfolio focus. Supporting capabilities reflect the business and creative experience I bring to a team."
+              eyebrow="Skills and tools"
+              title="A broad professional toolkit with a focused career direction"
+              description="The primary stack reflects my analytics and modern application work. Supporting skills show the business, creative and operational context I bring to a team."
             />
             <div className="primary-stack">
               {primarySkills.map((skill) => <span key={skill}>{skill}</span>)}
@@ -157,8 +186,8 @@ export default function HomePage() {
             <div className="section-row">
               <SectionHeading
                 eyebrow="Featured work"
-                title="Projects shaped by real problems"
-                description="Selected analytics, AI and application initiatives that show how I plan, build, iterate and document solutions."
+                title="Projects shaped by real business and user problems"
+                description="Selected analytics, AI and application initiatives showing how I define requirements, design workflows, build iteratively and document evidence."
               />
               <Link href="/projects" className="button button-secondary">View all projects <Icon name="arrow" size={17} /></Link>
             </div>
@@ -173,15 +202,15 @@ export default function HomePage() {
             <div>
               <SectionHeading
                 eyebrow="How I work"
-                title="Structured thinking, continuous iteration"
-                description="I approach projects as a cycle: understand the problem, design the workflow, build carefully, audit the result and improve with evidence."
+                title="Structured thinking, verifiable milestones and continuous iteration"
+                description="I separate product planning from implementation, develop in small milestones and audit the result before treating a release as complete."
               />
               <div className="process-list">
                 {[
-                  ["01", "Understand", "Clarify users, business context, data and success criteria."],
-                  ["02", "Design", "Create a clean information architecture and practical workflow."],
-                  ["03", "Build", "Develop in small, verifiable milestones with maintainable structure."],
-                  ["04", "Audit", "Test, document, fix and improve before calling the work complete."],
+                  ["01", "Understand", "Clarify users, business context, available data, constraints and success criteria."],
+                  ["02", "Design", "Create a clean information architecture, workflow, requirements and technical direction."],
+                  ["03", "Build", "Implement in small, reviewable milestones with maintainable components and version control."],
+                  ["04", "Audit", "Run type checks and builds, inspect the output, document changes and improve with evidence."],
                 ].map(([number, title, text]) => (
                   <div key={number}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></div>
                 ))}
@@ -191,7 +220,7 @@ export default function HomePage() {
               <span className="eyebrow">Why work with me</span>
               <h3>Technical curiosity grounded in business reality.</h3>
               <ul className="check-list">
-                <li><Icon name="check" size={17} /> Analytical and detail-oriented</li>
+                <li><Icon name="check" size={17} /> Analytical, organised and detail-oriented</li>
                 <li><Icon name="check" size={17} /> Comfortable across business and technology</li>
                 <li><Icon name="check" size={17} /> Strong documentation and project discipline</li>
                 <li><Icon name="check" size={17} /> Adaptable, self-driven and committed to learning</li>
@@ -204,9 +233,9 @@ export default function HomePage() {
         <section className="section-shell cta-section">
           <div className="container cta-card">
             <div>
-              <span className="eyebrow">Let&apos;s build something useful</span>
-              <h2>Need a data-focused professional who can also understand products and operations?</h2>
-              <p>I am open to remote roles, project collaborations and meaningful technology opportunities.</p>
+              <span className="eyebrow">Open to remote opportunities</span>
+              <h2>Looking for someone who can understand data, products and business operations?</h2>
+              <p>I am open to data and BI roles, web application work, SaaS collaboration, WordPress projects and practical AI-assisted initiatives.</p>
             </div>
             <div className="cta-actions">
               <Link href="/contact" className="button button-light">Start a conversation <Icon name="arrow" size={18} /></Link>

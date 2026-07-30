@@ -43,9 +43,16 @@ export default async function ProjectDetailPage({ params }: Props) {
                 {project.stack.map((item) => <span key={item}>{item}</span>)}
               </div>
               <div className="hero-actions">
-                <a className="button button-primary" href="https://github.com/SaifulIslamDS" target="_blank" rel="noreferrer">
-                  View GitHub <Icon name="external" size={17} />
-                </a>
+                {project.liveUrl ? (
+                  <a className="button button-primary" href={project.liveUrl} target="_blank" rel="noreferrer">
+                    View live project <Icon name="external" size={17} />
+                  </a>
+                ) : null}
+                {project.sourceUrl ? (
+                  <a className={project.liveUrl ? "button button-secondary" : "button button-primary"} href={project.sourceUrl} target="_blank" rel="noreferrer">
+                    View source <Icon name="github" size={17} />
+                  </a>
+                ) : null}
                 <Link className="button button-secondary" href="/contact">Discuss this work</Link>
               </div>
             </div>
@@ -81,7 +88,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
               <div className="case-callout">
                 <Icon name="spark" size={24} />
-                <div><strong>Current portfolio note</strong><p>This page is UI-ready. Live links, screenshots, metrics and CMS-managed case-study content will be connected in a later phase.</p></div>
+                <div><strong>Current portfolio note</strong><p>The project summary and verified links are integrated. Project screenshots, deeper metrics and CMS-managed case-study content will be added in later releases.</p></div>
               </div>
             </article>
             <aside className="case-sidebar">
@@ -92,9 +99,9 @@ export default async function ProjectDetailPage({ params }: Props) {
                 </ul>
               </div>
               <div className="detail-card">
-                <span className="eyebrow">Role</span>
-                <h3>Product planning, UX, development and documentation</h3>
-                <p>Responsibilities vary by project and will be editable from the future CMS.</p>
+                <span className="eyebrow">My role</span>
+                <h3>{project.role}</h3>
+                <p>The project content is currently maintained in code and will move to the planned portfolio CMS in a later release.</p>
               </div>
             </aside>
           </div>

@@ -1,7 +1,7 @@
-allowBuilds:
-  sharp: true
-
 minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
   - baseline-browser-mapping@2.11.8
+
+allowBuilds:
+  sharp: true

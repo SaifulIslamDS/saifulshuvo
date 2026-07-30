@@ -1,26 +1,10 @@
-# Saiful Islam — Portfolio UI
+# Saiful Islam Portfolio
 
-A responsive, CMS-ready personal portfolio frontend built with Next.js, TypeScript and custom CSS. This phase contains the complete public UI and an admin-dashboard preview. Authentication, Supabase, content CRUD, media uploads and form delivery are intentionally deferred to the backend/CMS phase.
+A responsive Next.js portfolio UI for Saiful Islam, positioned around data analytics, web application development, SaaS product work and practical AI-assisted solutions.
 
-## Included routes
+## Current release
 
-### Public website
-
-- `/` — Homepage
-- `/projects` — Project collection
-- `/projects/[slug]` — Static project case-study pages
-- `/blog` — Article listing UI
-- `/contact` — Contact form UI
-
-### Admin preview
-
-- `/admin` — Dashboard
-- `/admin/projects` — Project manager
-- `/admin/posts` — Blog manager and editor preview
-- `/admin/skills` — Skill manager
-- `/admin/settings` — Profile, social and SEO settings
-
-The admin area is intentionally public in this UI-only version. Do not enter private data. Authentication and authorization will be added before production use.
+`v0.2.0 — Real Portfolio Content Integration`
 
 ## Technology
 
@@ -28,22 +12,62 @@ The admin area is intentionally public in this UI-only version. Do not enter pri
 - React 19
 - TypeScript
 - Custom responsive CSS
-- No external UI or icon dependency
-- Netlify-ready configuration
-- pnpm package manager
+- pnpm 11
+- Netlify deployment
 
-## Local setup
+No database, authentication or CMS backend is connected yet.
 
-Prerequisites:
+## v0.2.0 highlights
+
+- Real professional positioning and contact information
+- Expanded analytics, development, AI, business and creative skills
+- Eight detailed project case-study routes
+- Verified external links where available
+- Responsive icon-only light/dark theme toggle
+- Theme preference persistence
+- Mobile and desktop navigation support
+- CMS-style admin UI preview
+
+## Routes
+
+```text
+/
+├── /projects
+├── /projects/[slug]
+├── /blog
+├── /contact
+└── /admin
+    ├── /admin/projects
+    ├── /admin/posts
+    ├── /admin/skills
+    └── /admin/settings
+```
+
+## Requirements
 
 - Node.js 22
-- Corepack
-- Git
+- pnpm 11.18.0
 
-```bash
+The repository includes:
+
+```text
+.nvmrc
+package.json
+pnpm-workspace.yaml
+netlify.toml
+```
+
+The pnpm workspace configuration keeps the minimum-release-age security policy and explicitly approves the trusted `sharp` build script required by the Next.js image toolchain.
+
+## Local development
+
+```powershell
+nvm use 22.23.2
 corepack enable
-corepack prepare pnpm@10.14.0 --activate
+corepack prepare pnpm@11.18.0 --activate
 pnpm install
+pnpm typecheck
+pnpm build
 pnpm dev
 ```
 
@@ -53,114 +77,54 @@ Open:
 http://localhost:3000
 ```
 
-Run production checks:
+## Upgrading an existing v0.1.0 repository
 
-```bash
-pnpm typecheck
-pnpm build
-pnpm start
-```
+Extract the v0.2.0 patch and copy its files into the existing repository root. Keep your existing `.git/` directory and `pnpm-lock.yaml`.
 
-## Add this project to the existing GitHub repository
+Then run:
 
-Assuming the repository is:
-
-```text
-https://github.com/SaifulIslamDS/portfolio
-```
-
-Clone the empty repository:
-
-```bash
-git clone https://github.com/SaifulIslamDS/portfolio.git
-cd portfolio
-```
-
-Copy all files from this project into that folder, then run:
-
-```bash
-corepack enable
-corepack prepare pnpm@10.14.0 --activate
+```powershell
 pnpm install
 pnpm typecheck
 pnpm build
-
-git add .
-git commit -m "feat: add responsive portfolio and admin UI"
-git push origin main
 ```
 
-Commit the generated `pnpm-lock.yaml` produced by `pnpm install`.
+## Netlify
 
-## Deploy to Netlify
-
-1. Sign in to Netlify.
-2. Select **Add new project** → **Import an existing project**.
-3. Connect GitHub and select `SaifulIslamDS/portfolio`.
-4. Netlify should detect Next.js automatically.
-5. Confirm:
+Recommended settings:
 
 ```text
-Base directory:        [blank]
-Build command:         pnpm build
-Publish directory:     .next
-Production branch:     main
+Base directory:       [blank]
+Build command:        pnpm build
+Publish directory:    .next
+Production branch:    main
 ```
 
-6. Select **Deploy**.
+The same values are declared in `netlify.toml`.
 
-The included `netlify.toml` already defines the build command, publish directory, Node version and security headers. Netlify's current Next.js adapter supports App Router deployments without a manually installed plugin.
+## Theme behavior
 
-## Content customization
+- First visit: follows the device light/dark preference
+- Later visits: uses the visitor's saved choice
+- Toggle: icon-only control beside the main navigation actions
+- Mobile: the same toggle remains visible beside the menu button
 
-Most portfolio content is centralized in:
+## Current limitations
 
-```text
-src/data/portfolio.ts
-```
+- `/admin` is a visual preview only
+- Contact form does not submit
+- Project screenshots are placeholders
+- Blog content is not published
+- CV is not stored yet; the current control opens an email request
+- Content is still maintained in `src/data/portfolio.ts`
 
-Update this file to change:
+## Planned next milestone
 
-- Skills
-- Services
-- Projects
-- Project case-study highlights
-- Planned articles
+`v0.3.0 — CMS Foundation`
 
-Update page-specific text in:
-
-```text
-src/app/page.tsx
-src/app/contact/page.tsx
-src/app/admin/settings/page.tsx
-```
-
-The portrait is a CSS placeholder and does not contain a personal image.
-
-## Backend/CMS phase roadmap
-
-Recommended next architecture:
-
-1. Supabase PostgreSQL schema
-2. Supabase Google authentication restricted to the owner
-3. Row Level Security policies
-4. Project, post, skill, profile and settings CRUD
-5. Supabase Storage media library
-6. Rich-text editor
-7. Draft, preview, publish and archive workflow
-8. Contact form persistence and email notification
-9. CV upload and active-version management
-10. SEO/Open Graph content from the CMS
-11. Admin route protection
-12. Migration from static data to database-backed content
-
-## Domain migration later
-
-After the Netlify preview has been reviewed, connect:
-
-```text
-saifulshuvo.com
-www.saifulshuvo.com
-```
-
-Do not change the current WordPress DNS until the new site has passed content, SEO, redirect and form testing.
+- Supabase project and schema
+- Google authentication
+- Owner-only admin access
+- Protected `/admin`
+- CMS-managed profile, skills and projects
+- Row Level Security

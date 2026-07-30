@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const nav = [
   ["About", "/#about"],
@@ -30,12 +31,13 @@ export function SiteHeader() {
         </nav>
 
         <div className="header-actions">
-          <Link className="button button-ghost header-cv" href="/contact">
+          <ThemeToggle />
+          <a className="button button-ghost header-cv" href="mailto:mail@saifulshuvo.com?subject=CV%20Request%20for%20Saiful%20Islam">
             <Icon name="download" size={17} />
-            Download CV
-          </Link>
+            Request CV
+          </a>
           <details className="mobile-menu">
-            <summary aria-label="Open menu">
+            <summary aria-label="Open navigation menu">
               <Icon name="menu" size={22} />
             </summary>
             <nav aria-label="Mobile navigation">
@@ -44,6 +46,7 @@ export function SiteHeader() {
                   {label}
                 </Link>
               ))}
+              <a href="mailto:mail@saifulshuvo.com?subject=CV%20Request%20for%20Saiful%20Islam">Request CV</a>
               <Link href="/admin">Admin UI Preview</Link>
             </nav>
           </details>

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const adminNav = [
   ["Dashboard", "/admin", "chart"],
@@ -32,7 +33,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <div className="admin-main">
         <header className="admin-topbar">
           <div><span className="eyebrow">Portfolio administration</span><strong>Content workspace</strong></div>
-          <div className="admin-profile"><span>SI</span><div><strong>Saiful Islam</strong><small>Owner administrator</small></div></div>
+          <div className="admin-topbar-actions"><ThemeToggle /><div className="admin-profile"><span>SI</span><div><strong>Saiful Islam</strong><small>Owner administrator</small></div></div></div>
         </header>
         <div className="admin-mobile-nav">
           {adminNav.map(([label, href, icon]) => <Link key={href} href={href}><Icon name={icon} size={17}/>{label}</Link>)}

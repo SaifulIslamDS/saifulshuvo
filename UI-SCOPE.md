@@ -1,36 +1,41 @@
-# UI Phase Scope
+# UI Scope — v0.2.0
 
-## Completed
+## Public portfolio
 
-- Dark, eye-soothing, technology-focused visual system
-- Fully responsive navigation and layouts
-- CSS-generated profile placeholder
-- Analytics-inspired hero artwork
-- About, career direction, services and capabilities sections
-- Categorized skills
-- Featured projects and project listing
-- Static project case-study pages
-- Blog listing UI
-- Contact page UI
-- Footer and social links
-- Admin dashboard preview
-- Project management table
-- Blog editor preview
-- Skills management UI
-- Profile and SEO settings UI
-- Metadata, sitemap, robots configuration and favicon
-- Netlify configuration
+- Responsive header and mobile menu
+- Icon-only persistent light/dark theme toggle
+- Hero positioning and availability
+- Profile-image placeholder
+- Professional statistics
+- Real About content
+- Professional foundation cards
+- Services and contribution areas
+- Categorised skills and tools
+- Featured project cards
+- Eight project detail routes
+- Working approach
+- Remote opportunity CTA
+- Contact information and form preview
+- Blog listing preview
+- Responsive footer
+- Metadata, sitemap and robots configuration
 
-## Intentionally not functional yet
+## Admin UI preview
 
-- Admin authentication
+- Dashboard overview
+- Project manager
+- Post editor preview
+- Skills manager
+- Website settings
+- Mobile admin navigation
+- Light-theme compatibility through the global theme preference
+
+## Not included
+
+- Authentication
 - Database
-- Content create/update/delete
-- Media upload
-- Rich-text persistence
-- Publish workflow
-- Contact submission
-- CV download
-- Analytics tracking
-- Real project screenshots
-- Personal profile image
+- CMS mutations
+- Image upload
+- Working contact submission
+- Published blog articles
+- Downloadable CV

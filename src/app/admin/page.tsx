@@ -7,7 +7,7 @@ export default function AdminDashboardPage() {
     ["Projects", projects.length.toString(), "+2 this quarter", "folder"],
     ["Published posts", "0", `${articles.length} drafts prepared`, "file"],
     ["Skills", skillGroups.reduce((sum, group) => sum + group.skills.length, 0).toString(), "Across 6 categories", "layers"],
-    ["Profile completion", "82%", "Add CV and profile photo", "user"],
+    ["Profile completion", "88%", "Add CV and profile photo", "user"],
   ];
 
   return (
@@ -33,7 +33,7 @@ export default function AdminDashboardPage() {
 
         <section className="admin-panel">
           <div className="panel-head"><div><span className="eyebrow">Publishing health</span><h2>Portfolio readiness</h2></div></div>
-          <div className="readiness-score"><div className="score-ring"><span>82%</span></div><p>Your core content structure is ready. Complete the identity and proof assets before production launch.</p></div>
+          <div className="readiness-score"><div className="score-ring"><span>88%</span></div><p>Your core content structure is ready. Complete the identity and proof assets before production launch.</p></div>
           <ul className="readiness-list">
             <li className="done"><Icon name="check" size={16}/> Hero positioning and professional summary</li>
             <li className="done"><Icon name="check" size={16}/> Skills and project structure</li>
