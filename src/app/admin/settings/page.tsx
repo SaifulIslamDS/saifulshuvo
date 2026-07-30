@@ -1,0 +1,13 @@
+import { Icon } from "@/components/Icon";
+
+export default function AdminSettingsPage() {
+  return (
+    <>
+      <div className="admin-page-head"><div><span className="eyebrow">Configuration</span><h1>Website settings</h1><p>Manage profile information, social links, SEO and availability.</p></div><button className="button button-primary"><Icon name="check" size={17}/> Save changes</button></div>
+      <div className="settings-layout">
+        <section className="admin-panel"><div className="panel-head"><div><span className="eyebrow">Identity</span><h2>Profile settings</h2></div></div><div className="profile-upload"><div className="portrait-placeholder admin-portrait"><div className="portrait-ring"><div className="portrait-core">SI</div></div></div><div><strong>Profile photo</strong><p>Upload a professional portrait later. Recommended: square image, at least 1200 × 1200 px.</p><button className="button button-secondary">Choose image</button></div></div><div className="form-row"><label>Full name<input defaultValue="Saiful Islam" /></label><label>Professional title<input defaultValue="Data Analyst & AI-Focused Software Builder" /></label></div><label>Short introduction<textarea rows={4} defaultValue="I combine analytical thinking, business experience and modern web technologies to build useful digital solutions." /></label><div className="form-row"><label>Location<input defaultValue="Bangladesh" /></label><label>Availability<select defaultValue="available"><option value="available">Available for remote opportunities</option><option>Open to selected projects</option><option>Not currently available</option></select></label></div></section>
+        <aside className="settings-side"><section className="admin-panel"><div className="panel-head"><div><span className="eyebrow">Social profiles</span><h2>External links</h2></div></div><label>GitHub<input defaultValue="https://github.com/SaifulIslamDS" /></label><label>LinkedIn<input defaultValue="https://www.linkedin.com/in/saifulislampro" /></label><label>Personal domain<input defaultValue="https://saifulshuvo.com" /></label></section><section className="admin-panel"><div className="panel-head"><div><span className="eyebrow">Search visibility</span><h2>Default SEO</h2></div></div><label>Site title<input defaultValue="Saiful Islam | Data Analyst & AI-Focused Software Builder" /></label><label>Meta description<textarea rows={4} defaultValue="Portfolio of Saiful Islam — data analytics, business intelligence, web development and AI-assisted solutions." /></label></section></aside>
+      </div>
+    </>
+  );
+}
