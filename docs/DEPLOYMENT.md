@@ -58,3 +58,11 @@ Tag only after local and production audits pass:
 git tag -a v0.3.0 -m "v0.3.0 - CMS Foundation"
 git push origin v0.3.0
 ```
+
+## v0.4.0 deployment order
+
+1. Apply `202607310002_project_cms.sql` to production Supabase.
+2. Add or update `ADMIN_EMAILS` in Netlify when multiple admins are needed.
+3. Push the v0.4.0 source and lockfile.
+4. Run a clear-cache deployment.
+5. Complete the production checklist in `TESTING-CHECKLIST.md`.

@@ -57,7 +57,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
         {!configured ? (
           <div className="auth-setup-box">
             <strong>Setup required</strong>
-            <span>Add the Supabase variables and ADMIN_EMAIL described in docs/SUPABASE-SETUP.md.</span>
+            <span>Add the Supabase variables and ADMIN_EMAILS described in docs/SUPABASE-SETUP.md.</span>
           </div>
         ) : null}
 

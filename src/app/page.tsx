@@ -8,14 +8,13 @@ import { SiteHeader } from "@/components/SiteHeader";
 import {
   experienceHighlights,
   primarySkills,
-  projects,
   services,
   skillGroups,
 } from "@/data/portfolio";
+import { getPublicProjects } from "@/lib/projects/queries";
 
-const featured = projects.filter((project) => project.featured);
-
-export default function HomePage() {
+export default async function HomePage() {
+  const featured = await getPublicProjects({ featuredOnly: true, limit: 6 });
   return (
     <>
       <SiteHeader />
@@ -192,7 +191,7 @@ export default function HomePage() {
               <Link href="/projects" className="button button-secondary">View all projects <Icon name="arrow" size={17} /></Link>
             </div>
             <div className="projects-grid">
-              {featured.map((project) => <ProjectCard project={project} key={project.slug} />)}
+              {featured.map((project) => <ProjectCard project={project} key={project.id} />)}
             </div>
           </div>
         </section>

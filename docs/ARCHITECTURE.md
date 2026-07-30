@@ -11,7 +11,7 @@ Owner
   └── /admin/login
        └── Google OAuth through Supabase Auth
             └── /auth/callback exchanges the code
-                 └── ADMIN_EMAIL verification
+                 └── ADMIN_EMAILS verification
                       └── Protected /admin route group
                            └── Future CMS mutations
 
@@ -58,3 +58,18 @@ supabase/migrations/202607310001_cms_foundation.sql
 ```
 
 The private schema stores the database administrator allow-list. Public content tables use RLS for public reads and owner-only writes.
+
+## v0.4.0 Project content flow
+
+```text
+Admin form
+  → Next.js Server Action
+  → server-verified Supabase user
+  → PostgreSQL RLS write policy
+  → lifecycle/version trigger
+  → audit event trigger
+  → route revalidation
+  → published public portfolio
+```
+
+The public project queries request published rows only. RLS independently enforces the same visibility boundary.

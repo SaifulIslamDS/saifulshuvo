@@ -56,3 +56,16 @@ The migration seeds:
 ## Write rules
 
 All CMS writes require an authenticated JWT whose verified email exists in `private.admin_allowlist`.
+
+## v0.4.0 project fields
+
+The second migration extends `public.projects` with:
+
+- `problem_statement`
+- `solution_overview`
+- `outcomes`
+- `cover_image_url`
+- `version`
+- `archived_at`
+
+`manage_project_lifecycle()` maintains version and lifecycle timestamps. `audit_project_change()` writes immutable records to `public.audit_events`.

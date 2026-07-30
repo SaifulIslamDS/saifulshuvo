@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
-import type { Project } from "@/data/portfolio";
+import type { PortfolioProject } from "@/types/project";
 
-export function ProjectCard({ project }: { project: Project }) {
+export function ProjectCard({ project }: { project: PortfolioProject }) {
   return (
     <article className={`project-card accent-${project.accent}`}>
       <div className="project-visual" aria-hidden="true">

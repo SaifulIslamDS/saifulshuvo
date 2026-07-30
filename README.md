@@ -1,18 +1,18 @@
 # Saiful Islam Portfolio
 
-A mobile-responsive personal portfolio and single-owner CMS foundation built with Next.js, TypeScript, Supabase and Netlify.
+A mobile-responsive personal portfolio and single-owner CMS built with Next.js, TypeScript, Supabase and Netlify.
 
 ## Current release
 
-**v0.3.0 — CMS Foundation**
+**v0.4.0 — Project CMS**
 
-This release adds Google-only admin authentication, a single-admin allow-list, protected admin routes, Supabase SSR session handling, PostgreSQL content tables, Row Level Security policies and initial portfolio seed data. Project, post, skill and settings forms remain UI previews until their CRUD milestones.
+The project portfolio is now database-backed. An approved Google administrator can create, edit, preview, publish, unpublish, feature, order, archive, restore and permanently delete archived projects. Public project pages, the homepage featured collection and the sitemap read published Supabase content.
 
 ## Stack
 
-- Next.js 16 App Router
-- React 19 and TypeScript
-- Supabase Auth and PostgreSQL
+- Next.js 16 App Router and React 19
+- TypeScript
+- Supabase Auth, PostgreSQL and Row Level Security
 - Supabase SSR cookie sessions
 - Netlify deployment
 - pnpm 11
@@ -30,53 +30,58 @@ pnpm build
 pnpm dev
 ```
 
-Complete the Supabase and Google OAuth configuration before opening `/admin`.
+Apply both migrations in order before using Project CMS:
+
+```text
+supabase/migrations/202607310001_cms_foundation.sql
+supabase/migrations/202607310002_project_cms.sql
+```
 
 ## Documentation
 
-All project documentation except this root README is kept in [`docs/`](./docs/README.md).
+All project documentation except this README is in [`docs/`](./docs/README.md).
 
 Start with:
 
-1. [`docs/UPGRADE-v0.3.0.md`](./docs/UPGRADE-v0.3.0.md)
-2. [`docs/SUPABASE-SETUP.md`](./docs/SUPABASE-SETUP.md)
-3. [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)
-4. [`docs/SECURITY.md`](./docs/SECURITY.md)
-5. [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md)
+1. [`docs/UPGRADE-v0.4.0.md`](./docs/UPGRADE-v0.4.0.md)
+2. [`docs/PROJECT-CMS.md`](./docs/PROJECT-CMS.md)
+3. [`docs/SUPABASE-SETUP.md`](./docs/SUPABASE-SETUP.md)
+4. [`docs/TESTING-CHECKLIST.md`](./docs/TESTING-CHECKLIST.md)
+5. [`docs/RELEASE-NOTES-v0.4.0.md`](./docs/RELEASE-NOTES-v0.4.0.md)
 
 ## Important routes
 
 ```text
 /
 /projects
-/blog
-/contact
+/projects/[slug]
 /admin/login
 /admin
 /admin/projects
-/admin/posts
-/admin/skills
-/admin/settings
-/auth/callback
+/admin/projects/new
+/admin/projects/[id]/edit
+/admin/projects/[id]/preview
 ```
 
 ## Release boundary
 
-Implemented in v0.3.0:
+Implemented in v0.4.0:
 
-- Google OAuth login
-- Server-verified admin session
-- Server-side email allow-list
-- Protected admin route group
-- Sign-out flow
-- Supabase SSR clients and Next.js proxy
-- CMS database migration, RLS and seed data
-- Configuration-safe public build
+- Supabase-backed project library
+- Create and edit project forms
+- Draft, publish, unpublish, archive and restore lifecycle
+- Permanent deletion restricted to archived projects
+- Featured and display-order controls
+- Admin preview for every publication status
+- Dynamic public project pages and metadata
+- Homepage featured projects from CMS
+- Database lifecycle/version trigger
+- Immutable project audit events
+- Multiple application admin emails through `ADMIN_EMAILS`
 
 Deferred:
 
-- Project CRUD
-- Post editor persistence
-- Skill and settings persistence
-- Media library and CV storage
-- Contact-form persistence
+- Blog CMS
+- Skills and site-settings persistence
+- Media upload and image library
+- Contact inbox and CV management

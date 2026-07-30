@@ -38,7 +38,7 @@ select email, created_at
 from private.admin_allowlist;
 ```
 
-The same email must be used for `ADMIN_EMAIL` in local and Netlify environment variables.
+Every database allow-list email must also be included in `ADMIN_EMAILS` (or the backward-compatible `ADMIN_EMAIL`) in local and Netlify environment variables.
 
 ## 4. Configure Google OAuth
 
@@ -110,7 +110,7 @@ Fill in:
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY
-ADMIN_EMAIL=YOUR_GOOGLE_EMAIL
+ADMIN_EMAILS=YOUR_GOOGLE_EMAIL
 ```
 
 Never commit `.env.local`.
@@ -150,3 +150,27 @@ ADMIN_EMAIL
 ```
 
 Use the production Netlify URL for `NEXT_PUBLIC_SITE_URL` until the custom domain is connected.
+
+## v0.4.0 migration
+
+After the CMS foundation migration, run:
+
+```text
+supabase/migrations/202607310002_project_cms.sql
+```
+
+For multiple application administrators, use a comma-separated environment variable:
+
+```dotenv
+ADMIN_EMAILS=first@gmail.com,second@gmail.com
+```
+
+Insert every email into the database allow-list as well:
+
+```sql
+insert into private.admin_allowlist (email)
+values
+  (lower('first@gmail.com')),
+  (lower('second@gmail.com'))
+on conflict (email) do nothing;
+```
