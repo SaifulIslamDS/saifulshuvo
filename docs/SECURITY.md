@@ -38,3 +38,16 @@
 ## Public data boundary
 
 Published profile, project, post and media content is intentionally public. Contact records, fingerprints, admin notes and delivery details remain private to allow-listed administrators.
+
+## v0.9.0 production controls
+
+- A Content Security Policy restricts scripts, connections, framing, forms and embedded objects.
+- HSTS, MIME sniffing protection, referrer policy and Permissions Policy are returned by Next.js route responses.
+- Admin and auth routes are private/no-store and noindex.
+- API routes are no-store and noindex.
+- The health endpoint exposes only bounded service status.
+- Telemetry events are accepted only through a security-definer RPC with type, size and rate validation.
+- Client-generated session IDs are SHA-256 hashed with a server-only secret before database storage.
+- Telemetry contains no raw IP, contact details or CMS content.
+- Analytics scripts can require consent and respect Do Not Track.
+- Retention cleanup supports data minimisation.

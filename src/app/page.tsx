@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { BlogCard } from "@/components/BlogCard";
 import { DashboardVisual } from "@/components/DashboardVisual";
 import { Icon } from "@/components/Icon";
+import { JsonLd } from "@/components/JsonLd";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -11,6 +12,7 @@ import { getPublicPosts } from "@/lib/posts/queries";
 import { getPublicProjects } from "@/lib/projects/queries";
 import { getPublicSiteMedia } from "@/lib/media/queries";
 import { getExperienceEntries, getHomepageContent, getServices, getSkillGroups } from "@/lib/profile/queries";
+import { getSiteUrl } from "@/lib/supabase/env";
 
 function SmartLink({ href, className, children }: { href: string; className: string; children: ReactNode }) {
   return href.startsWith("/") ? <Link href={href} className={className}>{children}</Link> : <a href={href} className={className} target="_blank" rel="noreferrer">{children}</a>;
@@ -30,11 +32,29 @@ export default async function HomePage() {
   const primarySkills = publicGroups.flatMap((group) => group.skills.filter((skill) => skill.featured && skill.active)).slice(0, 12);
   const githubUrl = content.socialLinks.github || "https://github.com/SaifulIslamDS";
   const linkedinUrl = content.socialLinks.linkedin || "https://www.linkedin.com/in/saifulislampro";
+  const siteUrl = getSiteUrl();
+  const profileSchema = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    mainEntity: {
+      "@type": "Person",
+      name: content.ownerName,
+      url: siteUrl,
+      jobTitle: content.professionalTitle,
+      description: content.shortBio,
+      email: `mailto:${content.contactEmail}`,
+      address: { "@type": "PostalAddress", addressLocality: content.location },
+      sameAs: [githubUrl, linkedinUrl, content.socialLinks.website].filter(Boolean),
+      knowsAbout: primarySkills.map((skill) => skill.name),
+      image: siteMedia.profileImage?.publicUrl,
+    },
+  };
 
   return (
     <>
+      <JsonLd data={profileSchema}/>
       <SiteHeader />
-      <main>
+      <main id="main-content">
         <section className="hero section-shell">
           <div className="hero-orb hero-orb-one" /><div className="hero-orb hero-orb-two" />
           <div className="container hero-grid">
@@ -51,7 +71,7 @@ export default async function HomePage() {
               </div>
               <div className="hero-socials"><span>Connect</span><a href={githubUrl} target="_blank" rel="noreferrer" aria-label="GitHub"><Icon name="github"/></a><a href={linkedinUrl} target="_blank" rel="noreferrer" aria-label="LinkedIn"><Icon name="linkedin"/></a><a href={`mailto:${content.contactEmail}`} aria-label={`Email ${content.ownerName}`}><Icon name="mail"/></a></div>
             </div>
-            <div className="hero-art"><DashboardVisual/><div className={`portrait-placeholder ${siteMedia.profileImage ? "portrait-has-image" : ""}`} aria-label={`${content.ownerName} profile image`}>{siteMedia.profileImage ? <img src={siteMedia.profileImage.publicUrl} alt={siteMedia.profileImage.altText ?? content.ownerName}/> : <div className="portrait-ring"><div className="portrait-core">SI</div></div>}<span>{siteMedia.profileImage?.caption ?? content.ownerName}</span></div></div>
+            <div className="hero-art"><DashboardVisual/><div className={`portrait-placeholder ${siteMedia.profileImage ? "portrait-has-image" : ""}`} aria-label={`${content.ownerName} profile image`}>{siteMedia.profileImage ? <img src={siteMedia.profileImage.publicUrl} alt={siteMedia.profileImage.altText ?? content.ownerName} width={siteMedia.profileImage.width ?? 480} height={siteMedia.profileImage.height ?? 600} fetchPriority="high" decoding="async"/> : <div className="portrait-ring"><div className="portrait-core">SI</div></div>}<span>{siteMedia.profileImage?.caption ?? content.ownerName}</span></div></div>
           </div>
           {content.stats.length ? <div className="container trust-strip">{content.stats.map((item, index) => <div key={`${item.label}-${index}`}><strong>{item.value}</strong><span>{item.label}</span></div>)}</div> : null}
         </section>

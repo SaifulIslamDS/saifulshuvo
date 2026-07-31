@@ -23,7 +23,7 @@ export default async function BlogPage({ searchParams }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className="inner-page">
+      <main id="main-content" className="inner-page">
         <section className="page-hero section-shell blog-page-hero">
           <div className="container">
             <SectionHeading

@@ -232,3 +232,26 @@ supabase/migrations/202607310006_contact_inbox.sql
 ```
 
 This creates the private inbox table and two public RPC functions. Anonymous clients receive no direct table access.
+
+## v0.9.0 migration
+
+After the contact-inbox migration, apply:
+
+```text
+supabase/migrations/202607310007_seo_analytics_hardening.sql
+```
+
+This extends `site_settings`, creates `telemetry_events`, and creates the controlled telemetry submission and retention functions.
+
+Verify:
+
+```sql
+select seo_default_title, analytics_provider, analytics_retention_days
+from public.site_settings
+where id = 'primary';
+
+select routine_name
+from information_schema.routines
+where routine_schema = 'public'
+  and routine_name in ('submit_telemetry_event', 'purge_expired_telemetry');
+```

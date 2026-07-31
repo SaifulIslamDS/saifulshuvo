@@ -82,3 +82,22 @@ Stores:
 Anonymous users receive no direct table privileges. The `submit_contact_message(...)` security-definer function validates and rate-limits public inserts. `finalize_contact_notification(...)` allows the originating Server Action to record one notification result using a one-time unguessable token.
 
 Indexes support inbox status, email, fingerprint, notification status and newest-first access.
+
+## SEO and Telemetry
+
+### Extended `site_settings`
+
+Stores global SEO title/description/keywords, social image assignment, indexing state, search-engine verification, analytics provider IDs, privacy choices, telemetry switches and retention days.
+
+### `telemetry_events`
+
+Stores bounded anonymous events:
+
+- Event type: page view, Web Vital or client error.
+- Public path.
+- Server-hashed session identifier.
+- Optional metric name, value and rating.
+- Small validated metadata object.
+- Occurrence timestamp.
+
+Anonymous users receive no direct table privileges. `submit_telemetry_event(...)` validates and rate-limits inserts. `purge_expired_telemetry()` is restricted to portfolio administrators.

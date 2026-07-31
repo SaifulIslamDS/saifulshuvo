@@ -4,11 +4,19 @@
 
 [build.environment]
   NODE_VERSION = "24.18.1"
+  NODE_ENV = "production"
 
+# Next.js-generated headers apply to SSR and route-handler responses. These
+# file-level defaults remain as a fallback for static assets served by Netlify.
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()"
+
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

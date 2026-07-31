@@ -112,3 +112,23 @@ Admin form
 202607310005_profile_homepage_cms.sql
 202607310006_contact_inbox.sql
 ```
+
+## v0.9.0 observability and discovery layer
+
+```text
+Public route render
+  ├── CMS SEO settings → Next.js Metadata API
+  ├── Published content → sitemap + JSON-LD
+  ├── Consent/DNT decision
+  │     ├── Optional GA4 or Plausible script
+  │     └── First-party page views / Web Vitals / bounded errors
+  └── POST /api/telemetry
+          ↓
+     server-side session hashing
+          ↓
+     submit_telemetry_event(...)
+          ↓
+     telemetry_events (admin read only)
+```
+
+`/api/health` performs a bounded database connectivity check. Security headers are returned from Next.js configuration so they also apply to SSR and route-handler responses on Netlify.

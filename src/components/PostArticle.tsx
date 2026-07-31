@@ -22,10 +22,10 @@ export function PostArticle({ post, preview = false }: { post: BlogPost; preview
           <span className="post-author-mark">SI</span>
           <div><strong>Saiful Islam</strong><span>{formatDate(post.publishedAt)} · {post.readTimeMinutes} min read</span></div>
         </div>
-        {post.featuredImageUrl ? <img className="post-featured-image" src={post.featuredImageUrl} alt={post.featuredImageAlt ?? ""} /> : null}
+        {post.featuredImageUrl ? <img className="post-featured-image" src={post.featuredImageUrl} alt={post.featuredImageAlt ?? ""}  loading="lazy" decoding="async"/> : null}
       </header>
       <div className="post-layout">
-        <main className="post-content rich-content" dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+        <div className="post-content rich-content" dangerouslySetInnerHTML={{ __html: post.contentHtml }}></div>
         <aside className="post-sidebar-card">
           <span className="eyebrow">Article details</span>
           <dl>

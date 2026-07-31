@@ -4,9 +4,9 @@ A mobile-responsive personal portfolio and single-owner CMS built with Next.js, 
 
 ## Current release
 
-**v0.8.0 — Contact Inbox and Email Notifications**
+**v0.9.0 — SEO, Analytics, Performance and Production Hardening**
 
-The public contact form now stores validated enquiries in a private Supabase-backed inbox. The administrator can review, prioritise, annotate, reply, archive and delete messages, while optional Resend notifications provide immediate delivery alerts without risking message loss when the email provider is unavailable.
+The site now includes database-managed SEO defaults, generated social artwork, structured data, dynamic robots and sitemap controls, optional consent-aware Google Analytics or Plausible loading, first-party page-view and Core Web Vitals telemetry, bounded client-error reporting, production security headers, health checks, accessibility improvements and retention controls.
 
 ## Stack
 
@@ -17,6 +17,7 @@ The public contact form now stores validated enquiries in a private Supabase-bac
 - Supabase SSR cookie sessions
 - Tiptap rich-text editor
 - Resend Email API for optional contact notifications
+- Optional Google Analytics 4 or Plausible Analytics
 - Netlify deployment
 
 ## Local setup
@@ -42,6 +43,7 @@ supabase/migrations/202607310003_blog_cms.sql
 supabase/migrations/202607310004_media_library.sql
 supabase/migrations/202607310005_profile_homepage_cms.sql
 supabase/migrations/202607310006_contact_inbox.sql
+supabase/migrations/202607310007_seo_analytics_hardening.sql
 ```
 
 ## Important routes
@@ -52,6 +54,7 @@ supabase/migrations/202607310006_contact_inbox.sql
 /cv
 /projects
 /blog
+/api/health
 /admin
 /admin/inbox
 /admin/homepage
@@ -61,6 +64,8 @@ supabase/migrations/202607310006_contact_inbox.sql
 /admin/posts
 /admin/media
 /admin/settings
+/admin/seo
+/admin/analytics
 ```
 
 ## Documentation
@@ -69,7 +74,7 @@ All documentation except this README is stored in [`docs/`](./docs/README.md).
 
 Start with:
 
-1. [`docs/UPGRADE-v0.8.0.md`](./docs/UPGRADE-v0.8.0.md)
-2. [`docs/CONTACT-INBOX.md`](./docs/CONTACT-INBOX.md)
-3. [`docs/TESTING-CHECKLIST.md`](./docs/TESTING-CHECKLIST.md)
-4. [`docs/RELEASE-NOTES-v0.8.0.md`](./docs/RELEASE-NOTES-v0.8.0.md)
+1. [`docs/UPGRADE-v0.9.0.md`](./docs/UPGRADE-v0.9.0.md)
+2. [`docs/SEO-ANALYTICS-HARDENING.md`](./docs/SEO-ANALYTICS-HARDENING.md)
+3. [`docs/PRODUCTION-CHECKLIST.md`](./docs/PRODUCTION-CHECKLIST.md)
+4. [`docs/RELEASE-NOTES-v0.9.0.md`](./docs/RELEASE-NOTES-v0.9.0.md)

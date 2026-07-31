@@ -33,7 +33,7 @@ export function ProjectCaseStudy({ project, preview = false }: { project: Portfo
           <div className="case-visual">
             {project.coverImageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img className="project-cover-image" src={project.coverImageUrl} alt={project.coverImageAlt ?? `${project.title} project cover`} />
+              <img className="project-cover-image" src={project.coverImageUrl} alt={project.coverImageAlt ?? `${project.title} project cover`} loading="eager" decoding="async" />
             ) : (
               <div className="project-visual large-project-visual">
                 <div className="visual-topbar"><i/><i/><i/></div>
@@ -45,7 +45,7 @@ export function ProjectCaseStudy({ project, preview = false }: { project: Portfo
         </div>
       </section>
 
-      {project.gallery.length ? <section className="section-shell project-gallery-section"><div className="container"><div className="section-row"><div><span className="eyebrow">Project media</span><h2>Screenshots and supporting evidence</h2></div></div><div className="project-gallery-grid">{project.gallery.map((asset) => <figure key={asset.id}><img src={asset.publicUrl} alt={asset.altText ?? `${project.title} screenshot`}/>{asset.caption ? <figcaption>{asset.caption}</figcaption> : null}</figure>)}</div></div></section> : null}
+      {project.gallery.length ? <section className="section-shell project-gallery-section"><div className="container"><div className="section-row"><div><span className="eyebrow">Project media</span><h2>Screenshots and supporting evidence</h2></div></div><div className="project-gallery-grid">{project.gallery.map((asset) => <figure key={asset.id}><img src={asset.publicUrl} alt={asset.altText ?? `${project.title} screenshot`} loading="lazy" decoding="async"/>{asset.caption ? <figcaption>{asset.caption}</figcaption> : null}</figure>)}</div></div></section> : null}
 
       <section className="section-shell case-content-section">
         <div className="container case-content-grid">

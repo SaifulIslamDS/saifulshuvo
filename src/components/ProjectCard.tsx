@@ -6,7 +6,7 @@ export function ProjectCard({ project }: { project: PortfolioProject }) {
   return (
     <article className={`project-card accent-${project.accent}`}>
       <div className={`project-visual ${project.coverImageUrl ? "project-card-has-cover" : ""}`} aria-hidden="true">
-        {project.coverImageUrl ? <img src={project.coverImageUrl} alt=""/> : <><div className="visual-topbar"><i /><i /><i /></div><div className="visual-layout"><span className="visual-sidebar"/><div className="visual-content"><span className="visual-kpi wide"/><span className="visual-kpi"/><span className="visual-kpi"/><span className="visual-chart"/></div></div></>}
+        {project.coverImageUrl ? <img src={project.coverImageUrl} alt="" loading="lazy" decoding="async"/> : <><div className="visual-topbar"><i /><i /><i /></div><div className="visual-layout"><span className="visual-sidebar"/><div className="visual-content"><span className="visual-kpi wide"/><span className="visual-kpi"/><span className="visual-kpi"/><span className="visual-chart"/></div></div></>}
       </div>
       <div className="project-card-body">
         <div className="project-meta">

@@ -15,6 +15,8 @@ const adminNav = [
   ["Experience", "/admin/experience", "briefcase"],
   ["Media", "/admin/media", "image"],
   ["Profile & CV", "/admin/settings", "settings"],
+  ["SEO & Analytics", "/admin/seo", "search"],
+  ["Reports", "/admin/analytics", "chart"],
 ];
 
 function getInitials(name: string): string {
@@ -40,7 +42,7 @@ export function AdminShell({
       <aside className="admin-sidebar">
         <Link href="/" className="brand admin-brand">
           <span className="brand-mark">SI</span>
-          <span><strong>Portfolio CMS</strong><small>Contact CMS v0.8.0</small></span>
+          <span><strong>Portfolio CMS</strong><small>Production CMS v0.9.0</small></span>
         </Link>
         <nav className="admin-nav" aria-label="Admin navigation">
           {adminNav.map(([label, href, icon]) => (
@@ -49,7 +51,7 @@ export function AdminShell({
         </nav>
         <div className="admin-sidebar-note cms-connected-note">
           <span className="status-dot" />
-          <div><strong>Contact CMS active</strong><small>Inbox + notifications + complete content CMS</small></div>
+          <div><strong>Production hardening active</strong><small>SEO + analytics + performance + security</small></div>
         </div>
         <Link href="/" className="button button-secondary admin-view-site"><Icon name="eye" size={17} /> View website</Link>
       </aside>

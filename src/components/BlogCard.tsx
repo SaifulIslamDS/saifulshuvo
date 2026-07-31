@@ -11,7 +11,7 @@ export function BlogCard({ post, featured = false }: { post: BlogPost; featured?
   return (
     <article className={`blog-card ${featured ? "blog-card-featured" : ""}`}>
       <Link href={`/blog/${post.slug}`} className={`blog-card-visual accent-${post.category?.accent ?? "cyan"}`} aria-label={`Read ${post.title}`}>
-        {post.featuredImageUrl ? <img src={post.featuredImageUrl} alt={post.featuredImageAlt ?? ""} /> : <Icon name="file" size={featured ? 44 : 34} />}
+        {post.featuredImageUrl ? <img src={post.featuredImageUrl} alt={post.featuredImageAlt ?? ""} loading="lazy" decoding="async" /> : <Icon name="file" size={featured ? 44 : 34} />}
       </Link>
       <div className="blog-card-body">
         <div className="blog-card-taxonomy">

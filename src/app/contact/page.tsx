@@ -19,7 +19,7 @@ export default async function ContactPage() {
   return (
     <>
       <SiteHeader />
-      <main className="inner-page">
+      <main id="main-content" className="inner-page">
         <section className="page-hero section-shell">
           <div className="container contact-grid">
             <div>

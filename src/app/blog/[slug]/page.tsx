@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PostArticle } from "@/components/PostArticle";
+import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getPublicPostBySlug } from "@/lib/posts/queries";
@@ -59,9 +60,9 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className="inner-page post-public-page">
+      <main id="main-content" className="inner-page post-public-page">
         <div className="container">
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
+          <JsonLd data={structuredData}/>
           <PostArticle post={post} />
         </div>
       </main>

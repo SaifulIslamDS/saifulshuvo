@@ -20,10 +20,12 @@ The repository includes `netlify.toml`:
 ```text
 Build command: pnpm build
 Publish directory: .next
-Node version source: .nvmrc → 24.18.1
+Node version: 24.18.1
 ```
 
-Required CMS variables:
+Next.js configuration returns security and cache headers for SSR, route handlers, admin, auth and API responses. Netlify file headers provide fallback protection and immutable caching for static chunks.
+
+## Required variables
 
 ```text
 NEXT_PUBLIC_SITE_URL
@@ -32,7 +34,7 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 ADMIN_EMAILS
 ```
 
-v0.8.0 notification variables:
+Contact notification variables:
 
 ```text
 RESEND_API_KEY
@@ -41,43 +43,38 @@ CONTACT_NOTIFICATION_TO
 CONTACT_FINGERPRINT_SECRET
 ```
 
-Set sensitive variables in the Netlify UI, not in `netlify.toml` or Git.
+v0.9.0 optional variable:
 
-Email configuration is optional for contact capture. Without it, messages remain functional and record `skipped` notification status.
+```text
+TELEMETRY_HASH_SECRET
+```
 
-## v0.8.0 deployment order
+Set server-only secrets in the Netlify UI. Never prefix them with `NEXT_PUBLIC_` or store them in Git.
 
-1. Confirm the v0.7.0 production site and database are healthy.
-2. Apply `202607310006_contact_inbox.sql` in production Supabase.
-3. Configure Resend and the four contact environment variables.
-4. Apply the v0.8.0 source upgrade.
+## v0.9.0 deployment order
+
+1. Confirm the v0.8.0 production site and database are healthy.
+2. Apply `202607310007_seo_analytics_hardening.sql` in production Supabase.
+3. Add `TELEMETRY_HASH_SECRET` or intentionally reuse `CONTACT_FINGERPRINT_SECRET`.
+4. Apply the v0.9.0 source upgrade.
 5. Run `pnpm install`, `pnpm typecheck` and `pnpm build` locally.
 6. Commit and push to `main`.
-7. Audit `/contact`, `/admin/inbox` and one message-detail route.
-8. Confirm notification status and email delivery.
-9. Complete `docs/TESTING-CHECKLIST.md`.
-10. Tag v0.8.0 only after production approval.
+7. Open `/admin/seo` and confirm production metadata/indexing settings.
+8. Audit `/robots.txt`, `/sitemap.xml`, `/opengraph-image` and `/api/health`.
+9. Review CSP/browser console output and OAuth login.
+10. Complete `docs/PRODUCTION-CHECKLIST.md` before tagging.
 
 ## Git commit
 
 ```powershell
 git add .
-git commit -m "feat: build contact inbox and email notifications"
+git commit -m "feat: harden SEO analytics and production readiness"
 git push origin main
 ```
 
 ## Release tag
 
 ```powershell
-git tag -a v0.8.0 -m "v0.8.0 - Contact Inbox and Email Notifications"
-git push origin v0.8.0
-```
-
-## Post-deploy routes
-
-```text
-/contact
-/admin
-/admin/inbox
-/admin/inbox/[id]
+git tag -a v0.9.0 -m "v0.9.0 - SEO Analytics Performance and Production Hardening"
+git push origin v0.9.0
 ```

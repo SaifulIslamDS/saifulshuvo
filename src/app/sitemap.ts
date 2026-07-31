@@ -2,15 +2,18 @@ import type { MetadataRoute } from "next";
 import { getPostTaxonomies, getPublicPosts } from "@/lib/posts/queries";
 import { getPublicProjects } from "@/lib/projects/queries";
 import { getSiteUrl } from "@/lib/supabase/env";
+import { getSeoAnalyticsSettings } from "@/lib/seo/queries";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getSiteUrl();
-  const [projects, postResult, taxonomies] = await Promise.all([
+  const [settings, projects, postResult, taxonomies] = await Promise.all([
+    getSeoAnalyticsSettings(false),
     getPublicProjects(),
     getPublicPosts({ pageSize: 1000 }),
     getPostTaxonomies(),
   ]);
-  const staticRoutes = ["", "/projects", "/blog", "/contact"];
+  if (!settings.indexSite) return [];
+  const staticRoutes = ["", "/projects", "/blog", "/contact", "/privacy"];
   return [
     ...staticRoutes.map((route) => ({ url: `${baseUrl}${route}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: route === "" ? 1 : 0.8 })),
     ...projects.map((project) => ({ url: `${baseUrl}/projects/${project.slug}`, lastModified: project.updatedAt ? new Date(project.updatedAt) : new Date(), changeFrequency: "monthly" as const, priority: 0.7 })),

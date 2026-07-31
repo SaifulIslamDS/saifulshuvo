@@ -57,3 +57,12 @@
 - Search, filters, workflow badges, priority and private notes.
 - Message detail, reply link, timeline and notification retry.
 - Light and dark theme coverage.
+
+## v0.9.0 production UI
+
+- SEO and analytics settings workspace.
+- Analytics summary cards, top-path table, Core Web Vitals ratings and client-error list.
+- Privacy consent control on public pages.
+- Skip navigation and visible keyboard focus.
+- Global error-recovery surfaces.
+- Generated Open Graph artwork and application manifest.

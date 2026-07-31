@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { submitContactAction } from "@/app/contact/actions";
 import { Icon } from "@/components/Icon";
@@ -99,7 +100,7 @@ export function ContactForm() {
       ) : null}
 
       <ContactSubmitButton />
-      <p className="form-note">Your message is stored securely in the private portfolio inbox. No raw IP address is retained.</p>
+      <p className="form-note">Your message is stored in the private portfolio inbox. No raw IP address is retained. See the <Link href="/privacy">privacy notice</Link>.</p>
     </form>
   );
 }
