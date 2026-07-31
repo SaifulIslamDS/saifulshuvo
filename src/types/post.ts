@@ -30,10 +30,13 @@ export type BlogPost = {
   featured: boolean;
   readTimeMinutes: number;
   featuredImageUrl?: string;
+  featuredImageAssetId?: string;
+  featuredImageAlt?: string;
   seoTitle?: string;
   seoDescription?: string;
   canonicalUrl?: string;
   ogImageUrl?: string;
+  ogImageAssetId?: string;
   sortOrder: number;
   version: number;
   publishedAt?: string;

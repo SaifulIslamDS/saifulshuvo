@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const project = await getPublicProjectBySlug(slug);
   return project
-    ? { title: project.seoTitle || project.title, description: project.seoDescription || project.summary }
+    ? { title: project.seoTitle || project.title, description: project.seoDescription || project.summary, openGraph: { title: project.seoTitle || project.title, description: project.seoDescription || project.summary, images: project.coverImageUrl ? [{ url: project.coverImageUrl }] : undefined }, twitter: { card: project.coverImageUrl ? "summary_large_image" : "summary", images: project.coverImageUrl ? [project.coverImageUrl] : undefined } }
     : { title: "Project not found" };
 }
 

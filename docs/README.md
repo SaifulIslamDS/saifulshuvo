@@ -1,33 +1,35 @@
 # Portfolio Documentation
 
-## Current release
+## Current
 
-- [CURRENT-STATUS.md](./CURRENT-STATUS.md)
-- [RELEASE-NOTES-v0.5.0.md](./RELEASE-NOTES-v0.5.0.md)
-- [UPGRADE-v0.5.0.md](./UPGRADE-v0.5.0.md)
-- [TESTING-CHECKLIST.md](./TESTING-CHECKLIST.md)
+- [Current Status](./CURRENT-STATUS.md)
+- [Architecture](./ARCHITECTURE.md)
+- [Database Schema](./DATABASE-SCHEMA.md)
+- [Security](./SECURITY.md)
+- [Deployment](./DEPLOYMENT.md)
+- [Development Workflow](./DEVELOPMENT-WORKFLOW.md)
+- [Testing Checklist](./TESTING-CHECKLIST.md)
+- [Roadmap](./ROADMAP.md)
 
-## Product and architecture
+## Feature guides
 
-- [ARCHITECTURE.md](./ARCHITECTURE.md)
-- [DATABASE-SCHEMA.md](./DATABASE-SCHEMA.md)
-- [SECURITY.md](./SECURITY.md)
-- [BLOG-CMS.md](./BLOG-CMS.md)
-- [PROJECT-CMS.md](./PROJECT-CMS.md)
-- [UI-SCOPE.md](./UI-SCOPE.md)
+- [Project CMS](./PROJECT-CMS.md)
+- [Blog CMS](./BLOG-CMS.md)
+- [Media Library](./MEDIA-LIBRARY.md)
+- [Supabase Setup](./SUPABASE-SETUP.md)
 
-## Setup and operations
+## Upgrade guides
 
-- [SUPABASE-SETUP.md](./SUPABASE-SETUP.md)
-- [DEPLOYMENT.md](./DEPLOYMENT.md)
-- [DEVELOPMENT-WORKFLOW.md](./DEVELOPMENT-WORKFLOW.md)
-- [ROADMAP.md](./ROADMAP.md)
+- [v0.2.0](./UPGRADE-v0.2.0.md)
+- [v0.3.0](./UPGRADE-v0.3.0.md)
+- [v0.4.0](./UPGRADE-v0.4.0.md)
+- [v0.5.0](./UPGRADE-v0.5.0.md)
+- [v0.6.0](./UPGRADE-v0.6.0.md)
 
-## Historical release documents
+## Release notes
 
-- [RELEASE-NOTES-v0.2.0.md](./RELEASE-NOTES-v0.2.0.md)
-- [RELEASE-NOTES-v0.3.0.md](./RELEASE-NOTES-v0.3.0.md)
-- [RELEASE-NOTES-v0.4.0.md](./RELEASE-NOTES-v0.4.0.md)
-- [UPGRADE-v0.2.0.md](./UPGRADE-v0.2.0.md)
-- [UPGRADE-v0.3.0.md](./UPGRADE-v0.3.0.md)
-- [UPGRADE-v0.4.0.md](./UPGRADE-v0.4.0.md)
+- [v0.2.0](./RELEASE-NOTES-v0.2.0.md)
+- [v0.3.0](./RELEASE-NOTES-v0.3.0.md)
+- [v0.4.0](./RELEASE-NOTES-v0.4.0.md)
+- [v0.5.0](./RELEASE-NOTES-v0.5.0.md)
+- [v0.6.0](./RELEASE-NOTES-v0.6.0.md)

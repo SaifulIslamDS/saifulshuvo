@@ -24,6 +24,7 @@ type ProjectRow = {
   solution_overview?: string | null;
   outcomes?: string[] | null;
   cover_image_url?: string | null;
+  cover_image_asset_id?: string | null;
   version?: number | null;
   published_at: string | null;
   archived_at?: string | null;
@@ -56,6 +57,8 @@ export function mapProjectRow(row: ProjectRow): PortfolioProject {
     solutionOverview: row.solution_overview ?? "",
     outcomes: row.outcomes ?? [],
     coverImageUrl: row.cover_image_url ?? undefined,
+    coverImageAssetId: row.cover_image_asset_id ?? undefined,
+    gallery: [],
     version: row.version ?? 1,
     publishedAt: row.published_at ?? undefined,
     archivedAt: row.archived_at ?? undefined,

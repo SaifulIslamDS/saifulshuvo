@@ -4,6 +4,7 @@ import { AdminFlash } from "@/components/admin/AdminFlash";
 import { ProjectForm } from "@/components/admin/ProjectForm";
 import { getAdminProjectById } from "@/lib/projects/queries";
 import { updateProjectAction } from "../../actions";
+import { getAdminImageAssets } from "@/lib/media/queries";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -11,7 +12,7 @@ type Props = {
 };
 
 export default async function EditProjectPage({ params, searchParams }: Props) {
-  const [{ id }, query] = await Promise.all([params, searchParams]);
+  const [{ id }, query, mediaAssets] = await Promise.all([params, searchParams, getAdminImageAssets()]);
   const project = await getAdminProjectById(id);
   if (!project) notFound();
   return (
@@ -21,7 +22,7 @@ export default async function EditProjectPage({ params, searchParams }: Props) {
         <Link href={`/admin/projects/${project.id}/preview`} className="button button-secondary">Preview project</Link>
       </div>
       <AdminFlash success={query.success} error={query.error} />
-      <ProjectForm project={project} action={updateProjectAction.bind(null, project.id)} submitLabel="Save changes" />
+      <ProjectForm project={project} action={updateProjectAction.bind(null, project.id)} submitLabel="Save changes" mediaAssets={mediaAssets} />
     </>
   );
 }

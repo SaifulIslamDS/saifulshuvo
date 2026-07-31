@@ -2,6 +2,7 @@ import { projects as staticProjects } from "@/data/portfolio";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabasePublicConfig } from "@/lib/supabase/env";
 import { mapProjectRow } from "@/lib/projects/project-mapper";
+import { getMediaAssetById, getProjectGallery } from "@/lib/media/queries";
 import type { PortfolioProject, ProjectPublicationStatus } from "@/types/project";
 
 function staticFallback(): PortfolioProject[] {
@@ -34,6 +35,7 @@ function staticFallback(): PortfolioProject[] {
     solutionOverview: "",
     outcomes: [],
     version: 1,
+    gallery: [],
   }));
 }
 
@@ -42,7 +44,7 @@ const projectSelect = `
   publication_status, project_state, is_featured, stack, highlights,
   accent, role, source_url, live_url, sort_order, seo_title,
   seo_description, problem_statement, solution_overview, outcomes,
-  cover_image_url, version, published_at, archived_at, created_at, updated_at
+  cover_image_url, cover_image_asset_id, version, published_at, archived_at, created_at, updated_at
 `;
 
 export async function getPublicProjects(options?: {
@@ -71,7 +73,13 @@ export async function getPublicProjects(options?: {
     return [];
   }
 
-  return (data ?? []).map(mapProjectRow);
+  return Promise.all((data ?? []).map(async (row) => {
+    const project = mapProjectRow(row);
+    const [cover, gallery] = await Promise.all([getMediaAssetById(project.coverImageAssetId), getProjectGallery(project.id)]);
+    project.coverImageAlt = cover?.altText;
+    project.gallery = gallery;
+    return project;
+  }));
 }
 
 export async function getPublicProjectBySlug(slug: string): Promise<PortfolioProject | null> {
@@ -91,7 +99,12 @@ export async function getPublicProjectBySlug(slug: string): Promise<PortfolioPro
     console.error("Unable to load project:", error.message);
     return null;
   }
-  return data ? mapProjectRow(data) : null;
+  if (!data) return null;
+  const project = mapProjectRow(data);
+  const [cover, gallery] = await Promise.all([getMediaAssetById(project.coverImageAssetId), getProjectGallery(project.id)]);
+    project.coverImageAlt = cover?.altText;
+    project.gallery = gallery;
+  return project;
 }
 
 export async function getAdminProjects(filters?: {
@@ -111,7 +124,13 @@ export async function getAdminProjects(filters?: {
   const { data, error } = await query;
   if (error) throw new Error(`Unable to load projects: ${error.message}`);
 
-  const mapped: PortfolioProject[] = (data ?? []).map(mapProjectRow);
+  const mapped: PortfolioProject[] = await Promise.all((data ?? []).map(async (row) => {
+    const project = mapProjectRow(row);
+    const [cover, gallery] = await Promise.all([getMediaAssetById(project.coverImageAssetId), getProjectGallery(project.id)]);
+    project.coverImageAlt = cover?.altText;
+    project.gallery = gallery;
+    return project;
+  }));
   const term = filters?.query?.trim().toLowerCase();
   if (!term) return mapped;
   return mapped.filter((project) =>
@@ -128,7 +147,12 @@ export async function getAdminProjectById(id: string): Promise<PortfolioProject 
     .maybeSingle();
 
   if (error) throw new Error(`Unable to load project: ${error.message}`);
-  return data ? mapProjectRow(data) : null;
+  if (!data) return null;
+  const project = mapProjectRow(data);
+  const [cover, gallery] = await Promise.all([getMediaAssetById(project.coverImageAssetId), getProjectGallery(project.id)]);
+    project.coverImageAlt = cover?.altText;
+    project.gallery = gallery;
+  return project;
 }
 
 export async function getAdminProjectCounts(): Promise<Record<ProjectPublicationStatus | "total", number>> {

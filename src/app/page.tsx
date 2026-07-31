@@ -14,11 +14,13 @@ import {
 } from "@/data/portfolio";
 import { getPublicPosts } from "@/lib/posts/queries";
 import { getPublicProjects } from "@/lib/projects/queries";
+import { getPublicSiteMedia } from "@/lib/media/queries";
 
 export default async function HomePage() {
-  const [featured, latestPosts] = await Promise.all([
+  const [featured, latestPosts, siteMedia] = await Promise.all([
     getPublicProjects({ featuredOnly: true, limit: 6 }),
     getPublicPosts({ limit: 3 }),
+    getPublicSiteMedia(),
   ]);
   return (
     <>
@@ -47,6 +49,7 @@ export default async function HomePage() {
                 <Link href="/contact" className="button button-secondary">
                   Discuss an opportunity
                 </Link>
+                {siteMedia.activeCv ? <a href="/cv" className="button button-ghost" target="_blank" rel="noreferrer"><Icon name="download" size={17}/> Download CV</a> : null}
               </div>
               <div className="hero-socials">
                 <span>Connect</span>
@@ -62,9 +65,9 @@ export default async function HomePage() {
 
             <div className="hero-art">
               <DashboardVisual />
-              <div className="portrait-placeholder" aria-label="Profile image placeholder">
-                <div className="portrait-ring"><div className="portrait-core">SI</div></div>
-                <span>Profile photo placeholder</span>
+              <div className={`portrait-placeholder ${siteMedia.profileImage ? "portrait-has-image" : ""}`} aria-label="Saiful Islam profile image">
+                {siteMedia.profileImage ? <img src={siteMedia.profileImage.publicUrl} alt={siteMedia.profileImage.altText ?? "Saiful Islam"}/> : <div className="portrait-ring"><div className="portrait-core">SI</div></div>}
+                <span>{siteMedia.profileImage?.caption ?? "Saiful Islam"}</span>
               </div>
             </div>
           </div>

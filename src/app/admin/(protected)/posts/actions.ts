@@ -127,14 +127,32 @@ async function postPayload(formData: FormData) {
       sort_order: positiveInteger(formData, "sort_order", 100),
       read_time_minutes: calculateReadTime(content),
       featured_image_url: safeUrl(optionalText(formData, "featured_image_url"), "Featured image URL"),
+      featured_image_asset_id: optionalText(formData, "featured_image_asset_id"),
       seo_title: optionalText(formData, "seo_title"),
       seo_description: optionalText(formData, "seo_description"),
       canonical_url: safeUrl(optionalText(formData, "canonical_url"), "Canonical URL"),
       og_image_url: safeUrl(optionalText(formData, "og_image_url"), "Open Graph image URL"),
+      og_image_asset_id: optionalText(formData, "og_image_asset_id"),
     },
     tagIds: [...new Set(tagIds)],
     categorySlug: category.slug,
   };
+}
+
+
+async function resolvePostMedia(
+  values: Awaited<ReturnType<typeof postPayload>>["values"],
+) {
+  const ids = [values.featured_image_asset_id, values.og_image_asset_id].filter(Boolean) as string[];
+  if (!ids.length) return values;
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("media_assets").select("id, public_url").in("id", ids).eq("media_kind", "image").eq("status", "active");
+  if (error) throw error;
+  const urlById = new Map<string, string>((data ?? []).map((asset: { id: string; public_url: string }) => [asset.id, asset.public_url] as const));
+  if (urlById.size !== new Set(ids).size) throw new Error("One or more selected blog images are unavailable.");
+  const featuredUrl = values.featured_image_asset_id ? urlById.get(values.featured_image_asset_id) ?? null : values.featured_image_url;
+  const ogUrl = values.og_image_asset_id ? urlById.get(values.og_image_asset_id) ?? null : values.og_image_url || featuredUrl;
+  return { ...values, featured_image_url: featuredUrl, og_image_url: ogUrl };
 }
 
 async function replacePostTags(postId: string, tagIds: string[]) {
@@ -170,6 +188,7 @@ export async function createPostAction(formData: FormData) {
   try { payload = await postPayload(formData); } catch (error) { fail(postPath(), error); }
 
   const supabase = await createClient();
+  try { payload.values = await resolvePostMedia(payload.values); } catch (error) { fail(postPath(), error); }
   const { data, error } = await supabase
     .from("posts")
     .insert({ ...payload.values, created_by: admin.id, updated_by: admin.id })
@@ -189,6 +208,7 @@ export async function updatePostAction(id: string, formData: FormData) {
   try { payload = await postPayload(formData); } catch (error) { fail(path, error); }
 
   const supabase = await createClient();
+  try { payload.values = await resolvePostMedia(payload.values); } catch (error) { fail(path, error); }
   const { data: existing, error: existingError } = await supabase
     .from("posts")
     .select("slug, category:post_categories(slug), post_tag_links(tag:post_tags(slug))")
@@ -289,10 +309,12 @@ export async function restorePostRevisionAction(postId: string, revisionId: numb
     publication_status: "draft",
     read_time_minutes: snapshot.read_time_minutes,
     featured_image_url: snapshot.featured_image_url,
+    featured_image_asset_id: snapshot.featured_image_asset_id,
     seo_title: snapshot.seo_title,
     seo_description: snapshot.seo_description,
     canonical_url: snapshot.canonical_url,
     og_image_url: snapshot.og_image_url,
+    og_image_asset_id: snapshot.og_image_asset_id,
     is_featured: snapshot.is_featured,
     sort_order: snapshot.sort_order,
     updated_by: admin.id,

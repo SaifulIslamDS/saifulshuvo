@@ -2,16 +2,20 @@ import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { SubmitButton } from "@/components/admin/SubmitButton";
 import type { PortfolioProject } from "@/types/project";
+import type { MediaAsset } from "@/types/media";
 
 export function ProjectForm({
   project,
   action,
   submitLabel,
+  mediaAssets,
 }: {
   project?: PortfolioProject;
   action: (formData: FormData) => void | Promise<void>;
   submitLabel: string;
+  mediaAssets: MediaAsset[];
 }) {
+  const selectedGallery = new Set(project?.gallery.map((asset) => asset.id) ?? []);
   return (
     <form action={action} className="project-editor-layout">
       <div className="project-editor-main">
@@ -50,7 +54,9 @@ export function ProjectForm({
             <label>Live project URL<input name="live_url" type="url" defaultValue={project?.liveUrl ?? ""} placeholder="https://example.com" /></label>
             <label>Source repository URL<input name="source_url" type="url" defaultValue={project?.sourceUrl ?? ""} placeholder="https://github.com/..." /></label>
           </div>
-          <label>Cover image URL<input name="cover_image_url" type="url" defaultValue={project?.coverImageUrl ?? ""} placeholder="Optional public image URL; media library comes later" /></label>
+          <label>Cover image from media library<select name="cover_image_asset_id" defaultValue={project?.coverImageAssetId ?? ""}><option value="">No library cover selected</option>{mediaAssets.map((asset) => <option key={asset.id} value={asset.id}>{asset.originalName} · {asset.purpose}</option>)}</select></label>
+          <label>External cover image URL<input name="cover_image_url" type="url" defaultValue={project?.coverImageAssetId ? "" : project?.coverImageUrl ?? ""} placeholder="Optional fallback when no library image is selected" /></label>
+          <div className="media-assignment-field"><div><strong>Project gallery</strong><small>Select screenshots or supporting artwork. Order follows the media library selection.</small></div><div className="media-checkbox-grid">{mediaAssets.length ? mediaAssets.map((asset) => <label key={asset.id}><input name="gallery_asset_ids" type="checkbox" value={asset.id} defaultChecked={selectedGallery.has(asset.id)}/><img src={asset.publicUrl} alt=""/><span>{asset.originalName}</span></label>) : <small>No active images. Upload project media first.</small>}</div></div>
         </section>
 
         <section className="admin-panel project-form-section">

@@ -1,102 +1,47 @@
-# v0.5.0 Testing Checklist
+# Testing Checklist
 
 ## Build
 
-- [ ] Node.js is 22.x
-- [ ] pnpm is 11.18.0
-- [ ] `pnpm install` succeeds
-- [ ] `pnpm clean` removes `.next` safely
-- [ ] `pnpm typecheck` succeeds
-- [ ] `pnpm build` succeeds
-- [ ] No ignored dependency build scripts remain
+- [ ] `pnpm install`
+- [ ] `pnpm typecheck`
+- [ ] `pnpm build`
+- [ ] Direct refresh works on all public and admin routes.
 
-## Migration
+## Migration and Storage
 
-- [ ] Migration 001 is applied
-- [ ] Migration 002 is applied
-- [ ] Migration 003 is applied
-- [ ] Initial categories exist
-- [ ] Initial tags exist
-- [ ] Existing seed posts remain drafts
-- [ ] RLS is enabled on all new tables
+- [ ] `202607310004_media_library.sql` runs once without error.
+- [ ] `portfolio-media` bucket is public.
+- [ ] JPG, PNG, WebP, GIF and PDF uploads work within limits.
+- [ ] Unsupported files and oversized files are rejected.
+- [ ] Duplicate files are rejected by SHA-256.
 
-## Authentication
+## Media library
 
-- [ ] Approved Google admin can access `/admin/posts`
-- [ ] Unapproved Google account is rejected
-- [ ] Signed-out visitor is redirected from protected routes
-- [ ] Sign out works
+- [ ] Search and kind/purpose/status filters work.
+- [ ] Alt text and captions update.
+- [ ] URL copy works.
+- [ ] Unused media can be archived and restored.
+- [ ] Assigned media cannot be archived.
+- [ ] Archived unused media can be permanently deleted.
 
-## Rich editor
+## Profile and CV
 
-- [ ] Editor loads without hydration warnings
-- [ ] Bold, italic, underline and strike work
-- [ ] H2, H3 and paragraph work
-- [ ] Bullet and numbered lists work
-- [ ] Blockquote and code block work
-- [ ] Link insertion and removal work
-- [ ] Image URL and alt text work
-- [ ] Horizontal rule works
-- [ ] Text alignment works
-- [ ] Undo and redo work
-- [ ] HTML and JSON survive save/reload
+- [ ] Profile image selection updates the homepage.
+- [ ] Clearing selection restores the initials placeholder.
+- [ ] CV PDF upload creates a version record.
+- [ ] Active CV selection exposes `/cv`.
+- [ ] Inactive CV metadata can be edited and deleted.
+- [ ] Active CV cannot be deleted.
 
-## Post lifecycle
+## Project and Blog media
 
-- [ ] Create draft
-- [ ] Edit draft
-- [ ] Preview draft
-- [ ] Publish immediately
-- [ ] Published article appears on `/blog`
-- [ ] Published article appears on `/blog/[slug]`
-- [ ] Move published post back to draft
-- [ ] Schedule a future post
-- [ ] Scheduled post stays hidden before publication time
-- [ ] Archive post
-- [ ] Archived post disappears publicly
-- [ ] Restore archived post to draft
-- [ ] Permanent delete is blocked for non-archived posts
-- [ ] Permanent delete succeeds for archived post
-
-## Categories and tags
-
-- [ ] Create category
-- [ ] Update category
-- [ ] Category archive route works
-- [ ] Category with linked posts cannot be deleted
-- [ ] Create tag
-- [ ] Update tag
-- [ ] Tag archive route works
-- [ ] Delete tag
-- [ ] Filtering by category and tag works
-
-## Revisions
-
-- [ ] Editing creates a new version
-- [ ] Revision list shows earlier versions
-- [ ] Historical revision preview renders
-- [ ] Restoring a revision creates a new draft
-- [ ] Current version remains in history
-- [ ] Tag relationships restore when present in snapshot
-- [ ] `post.revision_restored` audit event exists
-
-## SEO
-
-- [ ] Dynamic article title is correct
-- [ ] Meta description is correct
-- [ ] Canonical URL is correct
-- [ ] Open Graph image fallback works
-- [ ] Article JSON-LD is present
-- [ ] Published article is in sitemap
-- [ ] Category and tag archives are in sitemap
-- [ ] Draft and archived posts are absent from sitemap
+- [ ] Project cover and gallery save correctly.
+- [ ] Public project card/detail/gallery render selected media.
+- [ ] Blog featured and Open Graph image selections save.
+- [ ] Existing external image URLs remain supported.
 
 ## Responsive and themes
 
-- [ ] Blog list works on mobile
-- [ ] Article page works on mobile
-- [ ] Admin post list scrolls safely on mobile
-- [ ] Rich-editor toolbar remains usable on mobile
-- [ ] Taxonomy forms work on mobile
-- [ ] Light theme contrast is acceptable
-- [ ] Dark theme contrast is acceptable
+- [ ] `/admin/media` works on desktop, tablet and mobile.
+- [ ] Light and dark theme contrast is readable.
+- [ ] No horizontal overflow occurs.

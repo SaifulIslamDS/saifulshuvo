@@ -9,6 +9,7 @@ const adminNav = [
   ["Dashboard", "/admin", "chart"],
   ["Projects", "/admin/projects", "folder"],
   ["Posts", "/admin/posts", "file"],
+  ["Media", "/admin/media", "image"],
   ["Skills", "/admin/skills", "layers"],
   ["Settings", "/admin/settings", "settings"],
 ];
@@ -36,7 +37,7 @@ export function AdminShell({
       <aside className="admin-sidebar">
         <Link href="/" className="brand admin-brand">
           <span className="brand-mark">SI</span>
-          <span><strong>Portfolio CMS</strong><small>Blog CMS v0.5.0</small></span>
+          <span><strong>Portfolio CMS</strong><small>Media CMS v0.6.0</small></span>
         </Link>
         <nav className="admin-nav" aria-label="Admin navigation">
           {adminNav.map(([label, href, icon]) => (
@@ -45,7 +46,7 @@ export function AdminShell({
         </nav>
         <div className="admin-sidebar-note cms-connected-note">
           <span className="status-dot" />
-          <div><strong>Blog CMS active</strong><small>Projects + posts + revisions</small></div>
+          <div><strong>Media CMS active</strong><small>Projects + posts + storage + CV</small></div>
         </div>
         <Link href="/" className="button button-secondary admin-view-site"><Icon name="eye" size={17} /> View website</Link>
       </aside>

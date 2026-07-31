@@ -1,13 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabasePublicConfig } from "@/lib/supabase/env";
+import { getMediaAssetById } from "@/lib/media/queries";
 import { mapCategoryRow, mapPostRow, mapRevisionRow, mapTagRow } from "@/lib/posts/post-mapper";
 import { isPostScheduled } from "@/types/post";
 import type { AdminPostStatusFilter, BlogPost, PostCategory, PostPublicationStatus, PostRevision, PostTag } from "@/types/post";
 
 const postSelect = `
   id, slug, title, excerpt, content, content_json,
-  publication_status, read_time_minutes, featured_image_url,
-  seo_title, seo_description, canonical_url, og_image_url,
+  publication_status, read_time_minutes, featured_image_url, featured_image_asset_id,
+  seo_title, seo_description, canonical_url, og_image_url, og_image_asset_id,
   is_featured, sort_order, version, published_at, archived_at,
   created_at, updated_at,
   category:post_categories(id, slug, name, description, accent, sort_order),
@@ -31,6 +32,12 @@ export type PaginatedPosts = {
   pageSize: number;
   pageCount: number;
 };
+
+async function hydratePostMedia(post: BlogPost): Promise<BlogPost> {
+  const featured = await getMediaAssetById(post.featuredImageAssetId);
+  if (featured) post.featuredImageAlt = featured.altText;
+  return post;
+}
 
 function emptyPagination(filters?: PublicPostFilters): PaginatedPosts {
   const pageSize = filters?.pageSize ?? filters?.limit ?? 9;
@@ -56,7 +63,8 @@ export async function getPublicPosts(filters?: PublicPostFilters): Promise<Pagin
   }
 
   const term = filters?.query?.trim().toLowerCase();
-  let posts: BlogPost[] = ((data ?? []) as unknown[]).map(mapPostRow).filter((post: BlogPost) => {
+  let posts: BlogPost[] = await Promise.all(((data ?? []) as unknown[]).map(async (row) => hydratePostMedia(mapPostRow(row))));
+  posts = posts.filter((post: BlogPost) => {
     const categoryMatches = !filters?.category || post.category?.slug === filters.category;
     const tagMatches = !filters?.tag || post.tags.some((tag: PostTag) => tag.slug === filters.tag);
     const queryMatches = !term || [post.title, post.excerpt, post.categoryLabel, ...post.tags.map((tag: PostTag) => tag.name)]
@@ -87,7 +95,7 @@ export async function getPublicPostBySlug(slug: string): Promise<BlogPost | null
     console.error("Unable to load public post:", error.message);
     return null;
   }
-  return data ? mapPostRow(data) : null;
+  return data ? hydratePostMedia(mapPostRow(data)) : null;
 }
 
 export async function getAdminPosts(filters?: {
@@ -103,7 +111,7 @@ export async function getAdminPosts(filters?: {
   if (filters?.status && !["all", "scheduled"].includes(filters.status)) query = query.eq("publication_status", filters.status);
   const { data, error } = await query;
   if (error) throw new Error(`Unable to load posts: ${error.message}`);
-  const posts: BlogPost[] = ((data ?? []) as unknown[]).map(mapPostRow);
+  const posts: BlogPost[] = await Promise.all(((data ?? []) as unknown[]).map(async (row) => hydratePostMedia(mapPostRow(row))));
   const term = filters?.query?.trim().toLowerCase();
   const statusFiltered = filters?.status === "scheduled"
     ? posts.filter(isPostScheduled)
@@ -117,7 +125,7 @@ export async function getAdminPostById(id: string): Promise<BlogPost | null> {
   const supabase = await createClient();
   const { data, error } = await supabase.from("posts").select(postSelect).eq("id", id).maybeSingle();
   if (error) throw new Error(`Unable to load post: ${error.message}`);
-  return data ? mapPostRow(data) : null;
+  return data ? hydratePostMedia(mapPostRow(data)) : null;
 }
 
 export async function getPostRevisions(postId: string): Promise<PostRevision[]> {

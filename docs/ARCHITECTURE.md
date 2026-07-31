@@ -18,12 +18,15 @@ Approved administrator
                       └── Protected /admin route group
                            ├── Project Server Actions
                            ├── Blog Server Actions
+                           ├── Media and CV Server Actions
                            └── Route revalidation
 
 Database access
   └── Supabase publishable key + authenticated JWT
-       └── PostgreSQL Row Level Security
-            └── private.admin_allowlist
+       ├── PostgreSQL Row Level Security
+       │    └── private.admin_allowlist
+       └── Supabase Storage policies
+            └── portfolio-media bucket
 ```
 
 ## Application layers
@@ -36,6 +39,7 @@ Database access
 - `src/app/blog/[slug]`: article page and dynamic SEO
 - `src/app/blog/category/[slug]`: category archive
 - `src/app/blog/tag/[slug]`: tag archive
+- `src/app/cv`: active CV redirect
 - `src/app/sitemap.ts`: projects, posts and taxonomy archives
 
 ### Authentication
@@ -55,7 +59,7 @@ src/app/admin/login
 src/app/admin/(protected)
 ```
 
-The route group does not appear in URLs. `/admin`, `/admin/projects` and `/admin/posts` remain normal public URL structures protected by server layout checks.
+The route group does not appear in URLs. ``/admin`, `/admin/projects`, `/admin/posts`, `/admin/media` and `/admin/settings` remain normal URL structures protected by server layout checks.
 
 ### Project content flow
 
@@ -85,12 +89,29 @@ Tiptap editor
   → public article, archives, homepage and sitemap
 ```
 
+
+### Media content flow
+
+```text
+Admin upload form
+  → Server MIME/size validation
+  → SHA-256 duplicate check
+  → Supabase Storage upload
+  → media_assets metadata insert
+  → assignment to profile, CV, project or post
+  → RLS + lifecycle usage protection
+  → public page revalidation
+```
+
+Media assignment uses database foreign keys while legacy public URL columns remain synchronised for backward compatibility.
+
 ## Database migrations
 
 ```text
 202607310001_cms_foundation.sql
 202607310002_project_cms.sql
 202607310003_blog_cms.sql
+202607310004_media_library.sql
 ```
 
 ## Rendering and caching

@@ -86,7 +86,54 @@ function projectPayload(formData: FormData) {
     solution_overview: text(formData, "solution_overview"),
     outcomes: list(formData, "outcomes"),
     cover_image_url: safeUrl(optionalText(formData, "cover_image_url"), "Cover image URL"),
+    cover_image_asset_id: optionalText(formData, "cover_image_asset_id"),
   };
+}
+
+
+async function resolveProjectMedia(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  payload: ReturnType<typeof projectPayload>,
+) {
+  if (!payload.cover_image_asset_id) return payload;
+  const { data, error } = await supabase
+    .from("media_assets")
+    .select("id, public_url")
+    .eq("id", payload.cover_image_asset_id)
+    .eq("media_kind", "image")
+    .eq("status", "active")
+    .maybeSingle();
+  if (error || !data) throw new Error("Choose an active cover image from the media library.");
+  return { ...payload, cover_image_url: data.public_url };
+}
+
+async function syncProjectGallery(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  projectId: string,
+  formData: FormData,
+) {
+  const ids = formData.getAll("gallery_asset_ids")
+    .filter((value): value is string => typeof value === "string" && Boolean(value))
+    .filter((value, index, values) => values.indexOf(value) === index);
+  if (!ids.length) {
+    const { error: deleteError } = await supabase.from("project_media").delete().eq("project_id", projectId);
+    if (deleteError) throw deleteError;
+    return;
+  }
+  const { data: validAssets, error: assetError } = await supabase
+    .from("media_assets")
+    .select("id")
+    .in("id", ids)
+    .eq("media_kind", "image")
+    .eq("status", "active");
+  if (assetError) throw assetError;
+  if ((validAssets ?? []).length !== ids.length) throw new Error("One or more gallery images are unavailable.");
+  const { error: deleteError } = await supabase.from("project_media").delete().eq("project_id", projectId);
+  if (deleteError) throw deleteError;
+  const { error: insertError } = await supabase.from("project_media").insert(
+    ids.map((mediaAssetId, index) => ({ project_id: projectId, media_asset_id: mediaAssetId, sort_order: (index + 1) * 10 })),
+  );
+  if (insertError) throw insertError;
 }
 
 function message(error: unknown): string {
@@ -121,6 +168,7 @@ export async function createProjectAction(formData: FormData) {
   }
 
   const supabase = await createClient();
+  try { payload = await resolveProjectMedia(supabase, payload); } catch (error) { fail(adminProjectPath(), error); }
   const { data, error } = await supabase
     .from("projects")
     .insert({ ...payload, created_by: admin.id, updated_by: admin.id })
@@ -128,6 +176,7 @@ export async function createProjectAction(formData: FormData) {
     .single();
 
   if (error) fail(adminProjectPath(), error.code === "23505" ? new Error("This project slug already exists.") : error);
+  try { await syncProjectGallery(supabase, data.id, formData); } catch (galleryError) { fail(adminProjectPath(data.id), galleryError); }
 
   refreshProjectPages([data.slug]);
   redirect(`/admin/projects/${data.id}/edit?success=created`);
@@ -144,6 +193,7 @@ export async function updateProjectAction(id: string, formData: FormData) {
   }
 
   const supabase = await createClient();
+  try { payload = await resolveProjectMedia(supabase, payload); } catch (error) { fail(path, error); }
   const { data: existing, error: existingError } = await supabase
     .from("projects")
     .select("slug")
@@ -157,6 +207,7 @@ export async function updateProjectAction(id: string, formData: FormData) {
     .eq("id", id);
 
   if (error) fail(path, error.code === "23505" ? new Error("This project slug already exists.") : error);
+  try { await syncProjectGallery(supabase, id, formData); } catch (galleryError) { fail(path, galleryError); }
 
   refreshProjectPages([existing.slug, payload.slug]);
   redirect(`${path}?success=updated`);

@@ -1,3 +1,4 @@
+import type { MediaAsset } from "@/types/media";
 export type ProjectPublicationStatus = "draft" | "published" | "archived";
 export type ProjectState = "live" | "in_development" | "portfolio" | "deployed";
 
@@ -25,6 +26,9 @@ export type PortfolioProject = {
   solutionOverview: string;
   outcomes: string[];
   coverImageUrl?: string;
+  coverImageAssetId?: string;
+  coverImageAlt?: string;
+  gallery: MediaAsset[];
   version: number;
   publishedAt?: string;
   archivedAt?: string;

@@ -3,6 +3,7 @@ import { Icon } from "@/components/Icon";
 import { SubmitButton } from "@/components/admin/SubmitButton";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import type { BlogPost, PostCategory, PostTag } from "@/types/post";
+import type { MediaAsset } from "@/types/media";
 
 function dateTimeLocal(value?: string): string {
   if (!value) return "";
@@ -17,12 +18,14 @@ export function PostForm({
   tags,
   action,
   submitLabel,
+  mediaAssets,
 }: {
   post?: BlogPost;
   categories: PostCategory[];
   tags: PostTag[];
   action: (formData: FormData) => void | Promise<void>;
   submitLabel: string;
+  mediaAssets: MediaAsset[];
 }) {
   const selectedTags = new Set(post?.tags.map((tag) => tag.id) ?? []);
   return (
@@ -50,8 +53,12 @@ export function PostForm({
           </div>
           <label>Meta description<textarea name="seo_description" rows={3} maxLength={170} defaultValue={post?.seoDescription ?? ""} placeholder="Describe the article clearly in 140–160 characters." /></label>
           <div className="form-row">
-            <label>Featured image URL<input name="featured_image_url" type="url" defaultValue={post?.featuredImageUrl ?? ""} placeholder="https://..." /></label>
-            <label>Open Graph image URL<input name="og_image_url" type="url" defaultValue={post?.ogImageUrl ?? ""} placeholder="Defaults to featured image" /></label>
+            <label>Featured image from media library<select name="featured_image_asset_id" defaultValue={post?.featuredImageAssetId ?? ""}><option value="">No library image</option>{mediaAssets.map((asset) => <option key={asset.id} value={asset.id}>{asset.originalName} · {asset.purpose}</option>)}</select></label>
+            <label>Open Graph image from media library<select name="og_image_asset_id" defaultValue={post?.ogImageAssetId ?? ""}><option value="">Use featured image</option>{mediaAssets.map((asset) => <option key={asset.id} value={asset.id}>{asset.originalName} · {asset.purpose}</option>)}</select></label>
+          </div>
+          <div className="form-row">
+            <label>External featured image URL<input name="featured_image_url" type="url" defaultValue={post?.featuredImageAssetId ? "" : post?.featuredImageUrl ?? ""} placeholder="Optional fallback URL" /></label>
+            <label>External Open Graph image URL<input name="og_image_url" type="url" defaultValue={post?.ogImageAssetId ? "" : post?.ogImageUrl ?? ""} placeholder="Optional fallback URL" /></label>
           </div>
         </section>
       </div>

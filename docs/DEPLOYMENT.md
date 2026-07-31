@@ -31,45 +31,44 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 ADMIN_EMAILS
 ```
 
-`ADMIN_EMAIL` remains supported for a single legacy value.
+`ADMIN_EMAIL` remains supported for a single legacy value. v0.6.0 requires no new variable.
 
-## v0.5.0 deployment order
+## v0.6.0 deployment order
 
-1. Back up or verify the current v0.4.0 commit.
-2. Apply `202607310003_blog_cms.sql` to production Supabase.
-3. Apply the v0.5.0 source upgrade.
-4. Run `pnpm install` and commit the updated lockfile.
-5. Run `pnpm typecheck` and `pnpm build` locally.
-6. Push to `main`.
-7. Use a clear-cache Netlify deployment if dependency cache conflicts occur.
+1. Verify the deployed v0.5.0 commit and database.
+2. Apply `202607310004_media_library.sql` to production Supabase.
+3. Confirm the `portfolio-media` bucket and Storage policies exist.
+4. Apply the v0.6.0 source upgrade.
+5. Run `pnpm install`, `pnpm typecheck` and `pnpm build`.
+6. Commit and push to `main`.
+7. Clear the Netlify build cache only if needed.
 8. Complete `docs/TESTING-CHECKLIST.md`.
-9. Tag v0.5.0 only after production audit.
+9. Tag v0.6.0 only after production audit.
 
 ## Git commit
 
 ```powershell
-git status
 git add .
-git commit -m "feat: build full blog CMS"
+git commit -m "feat: build media library and CV management"
 git push origin main
 ```
 
 ## Release tag
 
 ```powershell
-git tag -a v0.5.0 -m "v0.5.0 - Full Blog CMS"
-git push origin v0.5.0
+git tag -a v0.6.0 -m "v0.6.0 - Media Library, Profile Image and CV Management"
+git push origin v0.6.0
 ```
 
 ## Post-deploy routes
 
 ```text
 /
-/blog
+/cv
+/projects/[published-slug]
 /blog/[published-slug]
-/blog/category/[category-slug]
-/blog/tag/[tag-slug]
-/admin/posts
-/admin/posts/new
-/admin/posts/taxonomies
+/admin/media
+/admin/settings
+/admin/projects/[id]/edit
+/admin/posts/[id]/edit
 ```

@@ -11,7 +11,7 @@ Create one Supabase project for the portfolio. From the project Connect dialog, 
 
 Do not add a service-role key to this application.
 
-## 2. Apply the migration
+## 2. Apply the migrations
 
 Open Supabase Dashboard → SQL Editor and run:
 
@@ -19,7 +19,7 @@ Open Supabase Dashboard → SQL Editor and run:
 supabase/migrations/202607310001_cms_foundation.sql
 ```
 
-The migration creates the CMS tables, triggers, RLS policies and initial content.
+Then apply migrations 002–004 in numeric order. Together they create project, blog, media, CV and Storage foundations.
 
 ## 3. Add the database administrator email
 
@@ -146,7 +146,7 @@ Netlify → Site configuration → Environment variables:
 NEXT_PUBLIC_SITE_URL
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-ADMIN_EMAIL
+ADMIN_EMAILS
 ```
 
 Use the production Netlify URL for `NEXT_PUBLIC_SITE_URL` until the custom domain is connected.
@@ -192,3 +192,32 @@ select slug, publication_status, version from public.posts order by sort_order;
 ```
 
 No new environment variable is required for v0.5.0.
+
+
+## v0.6.0 Media Library migration
+
+After migrations 001–003, run:
+
+```text
+supabase/migrations/202607310004_media_library.sql
+```
+
+Verify the bucket:
+
+```sql
+select id, public, file_size_limit, allowed_mime_types
+from storage.buckets
+where id = 'portfolio-media';
+```
+
+Verify the tables and settings fields:
+
+```sql
+select count(*) from public.media_assets;
+select count(*) from public.cv_documents;
+select profile_image_asset_id, active_cv_document_id
+from public.site_settings
+where id = 'primary';
+```
+
+No service-role key, new package or new environment variable is required.
