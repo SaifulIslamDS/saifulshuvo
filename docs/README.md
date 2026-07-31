@@ -16,6 +16,7 @@
 - [Project CMS](./PROJECT-CMS.md)
 - [Blog CMS](./BLOG-CMS.md)
 - [Media Library](./MEDIA-LIBRARY.md)
+- [Skills, Experience and Homepage CMS](./PROFILE-HOMEPAGE-CMS.md)
 - [Supabase Setup](./SUPABASE-SETUP.md)
 
 ## Upgrade guides
@@ -25,6 +26,7 @@
 - [v0.4.0](./UPGRADE-v0.4.0.md)
 - [v0.5.0](./UPGRADE-v0.5.0.md)
 - [v0.6.0](./UPGRADE-v0.6.0.md)
+- [v0.7.0](./UPGRADE-v0.7.0.md)
 
 ## Release notes
 
@@ -33,3 +35,4 @@
 - [v0.4.0](./RELEASE-NOTES-v0.4.0.md)
 - [v0.5.0](./RELEASE-NOTES-v0.5.0.md)
 - [v0.6.0](./RELEASE-NOTES-v0.6.0.md)
+- [v0.7.0](./RELEASE-NOTES-v0.7.0.md)

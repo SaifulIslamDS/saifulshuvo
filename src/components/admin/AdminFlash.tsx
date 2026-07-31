@@ -15,7 +15,7 @@ const successMessages: Record<string, string> = {
 export function AdminFlash({ success, error }: { success?: string; error?: string }) {
   if (!success && !error) return null;
   const isError = Boolean(error);
-  const content = error ?? successMessages[success ?? ""] ?? "Operation completed.";
+  const content = error ?? successMessages[success ?? ""] ?? success ?? "Operation completed.";
   return (
     <div className={`admin-flash ${isError ? "admin-flash-error" : "admin-flash-success"}`} role={isError ? "alert" : "status"}>
       <Icon name={isError ? "close" : "check"} size={18} />

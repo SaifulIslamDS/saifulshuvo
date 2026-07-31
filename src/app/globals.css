@@ -1337,3 +1337,85 @@ html[data-theme="light"] .media-card-preview { background: #e8eef6; }
 @media (max-width: 1180px) { .media-admin-layout { grid-template-columns: 1fr; } .media-upload-panel { position: static; } .media-library-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
 @media (max-width: 860px) { .media-filter-bar { grid-template-columns: repeat(2,minmax(0,1fr)); } .media-filter-bar input { grid-column: 1 / -1; } .project-gallery-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .cv-version-list article { grid-template-columns: auto 1fr; } .cv-version-actions { grid-column: 2; grid-template-columns: repeat(2,minmax(0,1fr)); } }
 @media (max-width: 620px) { .media-library-grid, .project-gallery-grid { grid-template-columns: 1fr; } .media-filter-bar { grid-template-columns: 1fr; } .media-filter-bar input { grid-column: auto; } .media-checkbox-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .cv-version-list article { grid-template-columns: 1fr; } .cv-version-icon { display: none; } .cv-version-actions { grid-column: auto; } }
+
+/* v0.7.0 — Homepage, skills and experience CMS */
+.profile-admin-layout { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 16px; align-items: start; }
+.profile-admin-main, .profile-admin-side { display: grid; gap: 16px; }
+.profile-cms-card { padding: 0; overflow: hidden; }
+.profile-cms-card > summary, .profile-record > summary, .create-record-panel > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 16px; }
+.profile-cms-card > summary::-webkit-details-marker, .profile-record > summary::-webkit-details-marker, .create-record-panel > summary::-webkit-details-marker { display: none; }
+.profile-cms-card > summary > div { flex: 1; display: grid; gap: 3px; }
+.profile-cms-card > summary small, .profile-record summary small { color: var(--muted); font-size: .61rem; }
+.profile-inline-form { display: grid; gap: 12px; padding: 16px; border-top: 1px solid var(--line); }
+.profile-inline-form label { display: grid; gap: 7px; color: var(--muted); font-size: .64rem; font-weight: 650; }
+.profile-inline-form input, .profile-inline-form textarea, .profile-inline-form select { width: 100%; }
+.compact-form-row { grid-template-columns: minmax(0, 1fr) 110px; }
+.three-col { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.checkbox-cluster { display: flex; flex-wrap: wrap; gap: 10px; }
+.checkbox-cluster .checkbox-row { min-width: 135px; flex: 1; }
+.inline-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.detached-delete-form { padding: 0 16px 16px; }
+.button-danger { background: transparent; border: 1px solid rgba(255, 91, 119, .35); color: #ff7f98; }
+.profile-record-list { display: grid; border-top: 1px solid var(--line); }
+.profile-record { border-bottom: 1px solid var(--line); }
+.profile-record:last-child { border-bottom: 0; }
+.profile-record > summary > div { flex: 1; display: grid; gap: 3px; }
+.profile-record > summary .visibility { margin-left: auto; }
+.nested-form { background: rgba(255,255,255,.015); }
+.sticky-profile-form { position: sticky; top: 92px; }
+.profile-stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.homepage-editor-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+.homepage-editor-main { display: grid; gap: 16px; }
+.homepage-editor-side { display: grid; gap: 16px; }
+.section-toggle-list { display: grid; gap: 8px; }
+.service-cms-panel { margin-top: 16px; }
+.service-admin-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.service-admin-grid > article { border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.015); overflow: hidden; }
+.record-hidden { opacity: .64; }
+.create-record-panel { margin-top: 14px; border: 1px dashed var(--line); border-radius: 14px; }
+.create-record-panel > summary { color: var(--text); font-weight: 700; }
+.experience-admin-list { display: grid; }
+.experience-admin-list > article { display: grid; grid-template-columns: 130px minmax(0, 1fr) auto; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--line); align-items: start; }
+.experience-admin-list > article:last-child { border-bottom: 0; }
+.experience-admin-period { display: grid; gap: 6px; }
+.experience-admin-period strong { color: var(--accent); font-size: .8rem; }
+.experience-admin-period span { color: var(--muted); font-size: .58rem; text-transform: uppercase; letter-spacing: .08em; }
+.experience-admin-list h2 { margin: 0 0 4px; font-size: .88rem; }
+.experience-admin-list small { color: var(--muted); }
+.experience-admin-list p { color: var(--muted); line-height: 1.65; font-size: .66rem; margin: 10px 0; }
+.record-actions { display: grid; gap: 8px; justify-items: end; }
+.dashboard-five-stats { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.accent-blue, .accent-card-blue { --card-accent: #5b8cff; }
+.accent-cyan, .accent-card-cyan { --card-accent: #37d6d0; }
+.accent-violet, .accent-card-violet { --card-accent: #9b7cff; }
+.accent-green, .accent-card-green { --card-accent: #54d98c; }
+.accent-orange, .accent-card-orange { --card-accent: #ffae62; }
+.service-card[class*="accent-card-"], .skill-card[class*="accent-card-"] { border-top-color: color-mix(in srgb, var(--card-accent) 55%, transparent); }
+.compact-tags { margin-top: 12px; }
+.experience-card small { color: var(--muted); display: block; margin-top: -5px; margin-bottom: 8px; font-size: .58rem; }
+.skill-title > div { display: grid; gap: 4px; }
+.skill-title small { color: var(--muted); font-size: .58rem; line-height: 1.45; }
+
+html[data-theme="light"] .nested-form,
+html[data-theme="light"] .service-admin-grid > article { background: rgba(15, 23, 42, .018); }
+
+@media (max-width: 1180px) {
+  .dashboard-five-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .service-admin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 980px) {
+  .profile-admin-layout, .homepage-editor-layout { grid-template-columns: 1fr; }
+  .sticky-profile-form { position: static; }
+  .profile-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .three-col, .service-admin-grid { grid-template-columns: 1fr; }
+  .experience-admin-list > article { grid-template-columns: 1fr; gap: 10px; }
+  .record-actions { justify-items: start; display: flex; flex-wrap: wrap; }
+  .dashboard-five-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .profile-stat-grid, .dashboard-five-stats { grid-template-columns: 1fr; }
+  .profile-cms-card > summary, .profile-record > summary { align-items: flex-start; flex-wrap: wrap; }
+  .profile-record > summary .visibility { margin-left: 34px; }
+}

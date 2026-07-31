@@ -1,49 +1,8 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
-
-export function SiteFooter() {
-  return (
-    <footer className="site-footer">
-      <div className="container footer-grid">
-        <div>
-          <Link href="/" className="brand footer-brand">
-            <span className="brand-mark">SI</span>
-            <span><strong>Saiful Islam</strong><small>Data · AI · Web Products</small></span>
-          </Link>
-          <p className="footer-copy">
-            A data analyst, web developer and SaaS builder combining business understanding,
-            analytics and modern application development to create practical solutions.
-          </p>
-        </div>
-        <div>
-          <h3>Explore</h3>
-          <Link href="/#about">About</Link>
-          <Link href="/#skills">Skills</Link>
-          <Link href="/projects">Projects</Link>
-          <Link href="/blog">Insights</Link>
-        </div>
-        <div>
-          <h3>Connect</h3>
-          <a href="https://github.com/SaifulIslamDS" target="_blank" rel="noreferrer">
-            <Icon name="github" size={16} /> GitHub
-          </a>
-          <a href="https://www.linkedin.com/in/saifulislampro" target="_blank" rel="noreferrer">
-            <Icon name="linkedin" size={16} /> LinkedIn
-          </a>
-          <a href="mailto:mail@saifulshuvo.com"><Icon name="mail" size={16} /> Email</a>
-        </div>
-        <div>
-          <h3>Availability</h3>
-          <span>Dhaka, Bangladesh</span>
-          <span>Remote worldwide</span>
-          <span>Data · BI · Web · SaaS</span>
-          <Link href="/admin">Portfolio CMS</Link>
-        </div>
-      </div>
-      <div className="container footer-bottom">
-        <span>© {new Date().getFullYear()} Saiful Islam. All rights reserved.</span>
-        <span>v0.5.0 · Full Blog CMS</span>
-      </div>
-    </footer>
-  );
+import { getHomepageContent } from "@/lib/profile/queries";
+function initials(name: string): string { return name.split(/\s+/).filter(Boolean).slice(0,2).map((part) => part[0]?.toUpperCase()).join("") || "SI"; }
+export async function SiteFooter() {
+  const content = await getHomepageContent();
+  return <footer className="site-footer"><div className="container footer-grid"><div><Link href="/" className="brand footer-brand"><span className="brand-mark">{initials(content.ownerName)}</span><span><strong>{content.ownerName}</strong><small>Data · AI · Web Products</small></span></Link><p className="footer-copy">{content.shortBio}</p></div><div><h3>Explore</h3><Link href="/#about">About</Link><Link href="/#skills">Skills</Link><Link href="/projects">Projects</Link><Link href="/blog">Insights</Link></div><div><h3>Connect</h3><a href={content.socialLinks.github || "https://github.com/SaifulIslamDS"} target="_blank" rel="noreferrer"><Icon name="github" size={16}/> GitHub</a><a href={content.socialLinks.linkedin || "https://www.linkedin.com/in/saifulislampro"} target="_blank" rel="noreferrer"><Icon name="linkedin" size={16}/> LinkedIn</a><a href={`mailto:${content.contactEmail}`}><Icon name="mail" size={16}/> Email</a></div><div><h3>Availability</h3><span>{content.location}</span><span>{content.availability}</span><span>Data · BI · Web · SaaS</span><Link href="/admin">Portfolio CMS</Link></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} {content.ownerName}. All rights reserved.</span><span>v0.7.0 · Profile &amp; Homepage CMS</span></div></footer>;
 }

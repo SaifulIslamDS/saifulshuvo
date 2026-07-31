@@ -117,3 +117,18 @@ Media assignment uses database foreign keys while legacy public URL columns rema
 ## Rendering and caching
 
 Server Actions call `revalidatePath()` after mutations. Public visibility is independently constrained by database RLS and explicit application query filters. Draft, future-scheduled and archived posts are never returned by public article queries.
+
+
+## Profile and Homepage content flow
+
+```text
+Admin forms
+  → authenticated Server Actions
+  → input and URL validation
+  → Supabase tables protected by admin RLS
+  → audit event
+  → revalidatePath('/')
+  → public server components read active profile content
+```
+
+`site_settings` owns singleton homepage content. Normalized tables own repeatable skills, experience and service cards. The public query layer retains static fallbacks for UI development before Supabase configuration.

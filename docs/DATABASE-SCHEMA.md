@@ -40,3 +40,25 @@ Stores title, version label, notes and a required PDF media reference.
 - `site_settings.active_cv_document_id`
 
 The function `media_asset_usage_count(uuid)` protects assigned media from archival and deletion.
+
+## Profile and Homepage CMS
+
+### Extended `site_settings`
+
+Stores public identity, social links, hero, About, statistics, professional positioning, process, work principles, CTA content, homepage section visibility and a monotonically increasing content version.
+
+### Extended `skill_groups`
+
+Adds description, accent and homepage-feature controls.
+
+### Extended `skills`
+
+Adds description, proficiency level, years of experience and optional evidence URL while retaining learning, featured, active and ordering controls.
+
+### `experience_entries`
+
+Stores role, organisation, dates, public period label, summary, achievements, technologies, featured status, public visibility and display order.
+
+### `services`
+
+Stores homepage capability cards with title, icon, description, accent, visibility and display order.

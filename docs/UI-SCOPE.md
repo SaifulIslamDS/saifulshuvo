@@ -39,3 +39,12 @@
 - Working contact submission
 - Published blog articles
 - Downloadable CV
+
+
+## v0.7.0 admin UI
+
+- Responsive Homepage CMS editor with sticky visibility controls.
+- Expandable skill groups and skill records with inline editing.
+- Experience library plus dedicated create/edit screens.
+- Service-card management inside the homepage workspace.
+- Dynamic public header, footer and homepage content.

@@ -4,9 +4,9 @@ A mobile-responsive personal portfolio and single-owner CMS built with Next.js, 
 
 ## Current release
 
-**v0.6.0 — Media Library, Profile Image and CV Management**
+**v0.7.0 — Skills, Experience and Homepage CMS**
 
-The CMS now includes protected Supabase Storage uploads, a searchable media library, safe media lifecycle controls, public profile-image selection, CV versioning, project galleries, and blog/project artwork assignment.
+The CMS now manages public positioning, hero and About copy, homepage statistics, services, process and CTA sections, section visibility, skill groups and individual skills, and the professional experience timeline. Project, blog, media, profile-image and CV modules remain integrated.
 
 ## Stack
 
@@ -38,6 +38,7 @@ supabase/migrations/202607310001_cms_foundation.sql
 supabase/migrations/202607310002_project_cms.sql
 supabase/migrations/202607310003_blog_cms.sql
 supabase/migrations/202607310004_media_library.sql
+supabase/migrations/202607310005_profile_homepage_cms.sql
 ```
 
 ## Important routes
@@ -48,6 +49,9 @@ supabase/migrations/202607310004_media_library.sql
 /projects
 /blog
 /admin
+/admin/homepage
+/admin/skills
+/admin/experience
 /admin/projects
 /admin/posts
 /admin/media
@@ -60,7 +64,7 @@ All documentation except this README is stored in [`docs/`](./docs/README.md).
 
 Start with:
 
-1. [`docs/UPGRADE-v0.6.0.md`](./docs/UPGRADE-v0.6.0.md)
-2. [`docs/MEDIA-LIBRARY.md`](./docs/MEDIA-LIBRARY.md)
+1. [`docs/UPGRADE-v0.7.0.md`](./docs/UPGRADE-v0.7.0.md)
+2. [`docs/PROFILE-HOMEPAGE-CMS.md`](./docs/PROFILE-HOMEPAGE-CMS.md)
 3. [`docs/TESTING-CHECKLIST.md`](./docs/TESTING-CHECKLIST.md)
-4. [`docs/RELEASE-NOTES-v0.6.0.md`](./docs/RELEASE-NOTES-v0.6.0.md)
+4. [`docs/RELEASE-NOTES-v0.7.0.md`](./docs/RELEASE-NOTES-v0.7.0.md)

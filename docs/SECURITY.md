@@ -20,3 +20,12 @@
 ## Public data boundary
 
 The bucket is public because profile, project, blog and CV assets are intended for public portfolio pages. Do not upload confidential documents or private personal records.
+
+
+## v0.7.0 profile-content controls
+
+- Homepage, skill, experience and service mutations call `requireAdmin()` inside each Server Action.
+- RLS grants writes only when `public.is_portfolio_admin()` is true.
+- Anonymous profile reads are limited to active rows. Skills additionally require an active parent group.
+- Internal and external links are validated server-side before storage.
+- Active records must be hidden before permanent deletion, and non-empty skill groups cannot be deleted.

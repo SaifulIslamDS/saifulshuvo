@@ -2,18 +2,20 @@
 
 ## Active release
 
-**v0.6.0 — Media Library, Profile Image and CV Management**
+**v0.7.0 — Skills, Experience and Homepage CMS**
 
 ## Functional modules
 
-- Responsive public portfolio with light/dark themes.
-- Google-only admin authentication and allow-list authorization.
-- Project CMS with lifecycle, preview, galleries and SEO.
+- Responsive public portfolio with persistent light/dark themes.
+- Google-only admin authentication and application/database allow-list authorization.
+- Project CMS with lifecycle, preview, media galleries and SEO.
 - Blog CMS with Tiptap editor, taxonomies, revisions, scheduling and SEO.
-- Supabase Storage media library.
-- Profile image and CV version management.
-- Database RLS and append-only audit events.
+- Supabase Storage media library with profile-image and CV version management.
+- Homepage CMS for hero, About, statistics, services, work process, CTA and section visibility.
+- Skills CMS with groups, proficiency, evidence, learning and visibility metadata.
+- Experience CMS with timeline, achievements, technologies and homepage controls.
+- RLS-protected database and append-only audit events.
 
 ## Next planned release
 
-**v0.7.0 — Skills, Experience and Homepage CMS**
+**v0.8.0 — Contact Inbox and Email Notifications**
