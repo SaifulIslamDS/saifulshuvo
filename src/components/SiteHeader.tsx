@@ -47,7 +47,7 @@ export function SiteHeader() {
                 </Link>
               ))}
               <a href="mailto:mail@saifulshuvo.com?subject=CV%20Request%20for%20Saiful%20Islam">Request CV</a>
-              <Link href="/admin">Admin UI Preview</Link>
+              <Link href="/admin">Portfolio CMS</Link>
             </nav>
           </details>
         </div>

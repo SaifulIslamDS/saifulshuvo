@@ -174,3 +174,21 @@ values
   (lower('second@gmail.com'))
 on conflict (email) do nothing;
 ```
+
+## v0.5.0 Blog CMS migration
+
+After migrations 001 and 002, run:
+
+```text
+supabase/migrations/202607310003_blog_cms.sql
+```
+
+Verify:
+
+```sql
+select slug, name from public.post_categories order by sort_order;
+select slug, name from public.post_tags order by name;
+select slug, publication_status, version from public.posts order by sort_order;
+```
+
+No new environment variable is required for v0.5.0.

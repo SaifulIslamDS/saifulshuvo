@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BlogCard } from "@/components/BlogCard";
 import { DashboardVisual } from "@/components/DashboardVisual";
 import { Icon } from "@/components/Icon";
 import { ProjectCard } from "@/components/ProjectCard";
@@ -11,10 +12,14 @@ import {
   services,
   skillGroups,
 } from "@/data/portfolio";
+import { getPublicPosts } from "@/lib/posts/queries";
 import { getPublicProjects } from "@/lib/projects/queries";
 
 export default async function HomePage() {
-  const featured = await getPublicProjects({ featuredOnly: true, limit: 6 });
+  const [featured, latestPosts] = await Promise.all([
+    getPublicProjects({ featuredOnly: true, limit: 6 }),
+    getPublicPosts({ limit: 3 }),
+  ]);
   return (
     <>
       <SiteHeader />
@@ -195,6 +200,24 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
+
+        {latestPosts.posts.length ? (
+          <section className="section-shell insights-section">
+            <div className="container">
+              <div className="section-row">
+                <SectionHeading
+                  eyebrow="Latest insights"
+                  title="Practical writing on data, AI and building useful products"
+                  description="Articles that turn current learning, project decisions and business experience into reusable knowledge."
+                />
+                <Link href="/blog" className="button button-secondary">Browse all articles <Icon name="arrow" size={17} /></Link>
+              </div>
+              <div className="blog-grid home-blog-grid">
+                {latestPosts.posts.map((post) => <BlogCard key={post.id} post={post} />)}
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         <section className="section-shell values-section">
           <div className="container values-grid">

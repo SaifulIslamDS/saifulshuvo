@@ -1,25 +1,28 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
+import { getAdminPostCounts, getAdminPosts } from "@/lib/posts/queries";
 import { getAdminProjectCounts, getAdminProjects } from "@/lib/projects/queries";
-import { articles, skillGroups } from "@/data/portfolio";
+import { skillGroups } from "@/data/portfolio";
 
 export default async function AdminDashboardPage() {
-  const [counts, projects] = await Promise.all([getAdminProjectCounts(), getAdminProjects()]);
+  const [projectCounts, projects, postCounts, posts] = await Promise.all([
+    getAdminProjectCounts(), getAdminProjects(), getAdminPostCounts(), getAdminPosts(),
+  ]);
   const stats = [
-    ["Projects", counts.total.toString(), `${counts.published} published`, "folder"],
-    ["Draft projects", counts.draft.toString(), "Awaiting review", "edit"],
-    ["Articles", articles.length.toString(), "Blog CMS next", "file"],
-    ["Skill groups", skillGroups.length.toString(), "Static until v0.5.0", "layers"],
+    ["Projects", projectCounts.total.toString(), `${projectCounts.published} published`, "folder"],
+    ["Articles", postCounts.total.toString(), `${postCounts.published} published`, "file"],
+    ["Draft content", (projectCounts.draft + postCounts.draft).toString(), "Awaiting review", "edit"],
+    ["Skill groups", skillGroups.length.toString(), "Homepage CMS scheduled", "layers"],
   ];
   return (
     <>
-      <div className="admin-page-head"><div><span className="eyebrow">CMS overview</span><h1>Dashboard</h1><p>Manage the project portfolio and review the next content milestones.</p></div><div className="admin-actions"><Link href="/admin/projects/new" className="button button-primary"><Icon name="plus" size={17}/> Add project</Link><Link href="/" className="button button-secondary"><Icon name="eye" size={17}/> View website</Link></div></div>
+      <div className="admin-page-head"><div><span className="eyebrow">CMS overview</span><h1>Dashboard</h1><p>Manage portfolio projects, long-form articles and the next content milestones.</p></div><div className="admin-actions"><Link href="/admin/posts/new" className="button button-primary"><Icon name="plus" size={17}/> New post</Link><Link href="/" className="button button-secondary"><Icon name="eye" size={17}/> View website</Link></div></div>
       <div className="admin-stat-grid">{stats.map(([label,value,note,icon]) => <article key={label}><span className="icon-box small"><Icon name={icon} size={20}/></span><div><small>{label}</small><strong>{value}</strong><span>{note}</span></div></article>)}</div>
       <div className="admin-grid-two">
-        <section className="admin-panel"><div className="panel-head"><div><span className="eyebrow">Recent content</span><h2>Project library</h2></div><Link href="/admin/projects">View all</Link></div><div className="content-table">{projects.slice(0,5).map((project) => <div className="content-row" key={project.id}><span className={`table-thumb accent-${project.accent}`}><Icon name="folder" size={18}/></span><div><strong>{project.title}</strong><small>{project.category}</small></div><span className={`publication-badge publication-${project.publicationStatus}`}>{project.publicationStatus}</span><Link aria-label={`Edit ${project.title}`} href={`/admin/projects/${project.id}/edit`}><Icon name="edit" size={17}/></Link></div>)}</div></section>
-        <section className="admin-panel"><div className="panel-head"><div><span className="eyebrow">Release progress</span><h2>CMS readiness</h2></div></div><div className="readiness-score"><div className="score-ring"><span>52%</span></div><p>Project CRUD is functional. Posts, skills, settings and media remain scheduled.</p></div><ul className="readiness-list"><li className="done"><Icon name="check" size={14}/> Authentication and RLS</li><li className="done"><Icon name="check" size={14}/> Project create, edit and preview</li><li className="done"><Icon name="check" size={14}/> Publish, archive and delete</li><li><span/> Blog CMS</li><li><span/> Media library</li></ul></section>
+        <section className="admin-panel"><div className="panel-head"><div><span className="eyebrow">Recent content</span><h2>Publishing library</h2></div></div><div className="content-table">{[...posts.slice(0,3).map((post) => ({ id: post.id, title: post.title, note: `${post.categoryLabel} · ${post.readTimeMinutes} min`, status: post.publicationStatus, href: `/admin/posts/${post.id}/edit`, icon: "file" })), ...projects.slice(0,2).map((project) => ({ id: project.id, title: project.title, note: project.category, status: project.publicationStatus, href: `/admin/projects/${project.id}/edit`, icon: "folder" }))].map((item) => <div className="content-row" key={`${item.icon}-${item.id}`}><span className="table-thumb"><Icon name={item.icon} size={18}/></span><div><strong>{item.title}</strong><small>{item.note}</small></div><span className={`publication-badge publication-${item.status}`}>{item.status}</span><Link aria-label={`Edit ${item.title}`} href={item.href}><Icon name="edit" size={17}/></Link></div>)}</div></section>
+        <section className="admin-panel"><div className="panel-head"><div><span className="eyebrow">Release progress</span><h2>CMS readiness</h2></div></div><div className="readiness-score"><div className="score-ring"><span>68%</span></div><p>Projects and blog publishing are functional. Media, homepage content and contact operations remain scheduled.</p></div><ul className="readiness-list"><li className="done"><Icon name="check" size={14}/> Authentication and RLS</li><li className="done"><Icon name="check" size={14}/> Project CMS</li><li className="done"><Icon name="check" size={14}/> Blog editor and publishing</li><li className="done"><Icon name="check" size={14}/> Categories, tags and revisions</li><li><span/> Media library and CV</li></ul></section>
       </div>
-      <section className="admin-panel quick-actions-panel"><div className="panel-head"><div><span className="eyebrow">Quick actions</span><h2>Continue managing content</h2></div></div><div className="quick-action-grid"><Link href="/admin/projects/new"><Icon name="plus"/><span><strong>Add a project</strong><small>Create a new portfolio case study</small></span></Link><Link href="/admin/projects?status=draft"><Icon name="edit"/><span><strong>Review drafts</strong><small>Prepare content for publishing</small></span></Link><Link href="/admin/projects?status=archived"><Icon name="layers"/><span><strong>Archived projects</strong><small>Restore or permanently delete</small></span></Link><Link href="/projects"><Icon name="eye"/><span><strong>Public portfolio</strong><small>Check published project pages</small></span></Link></div></section>
+      <section className="admin-panel quick-actions-panel"><div className="panel-head"><div><span className="eyebrow">Quick actions</span><h2>Continue managing content</h2></div></div><div className="quick-action-grid"><Link href="/admin/posts/new"><Icon name="plus"/><span><strong>Write an article</strong><small>Create a draft with the rich editor</small></span></Link><Link href="/admin/posts?status=draft"><Icon name="edit"/><span><strong>Review post drafts</strong><small>Preview and prepare for publishing</small></span></Link><Link href="/admin/posts/taxonomies"><Icon name="layers"/><span><strong>Manage taxonomies</strong><small>Categories and controlled tags</small></span></Link><Link href="/blog"><Icon name="eye"/><span><strong>Public insights</strong><small>Check published article pages</small></span></Link></div></section>
     </>
   );
 }

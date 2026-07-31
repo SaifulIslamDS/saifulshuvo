@@ -2,32 +2,38 @@
 
 ## Release
 
-`v0.4.0 — Project CMS`
+`v0.5.0 — Full Blog CMS`
 
 ## Working now
 
 - Responsive light/dark public portfolio UI
 - Google-only Supabase authentication
-- Application email allow-list and database allow-list
+- Application and database admin allow-lists
 - Protected admin routes
-- Project create, read, update and delete workflow
-- Draft/published/archived lifecycle
-- Published project listing and dynamic detail pages
-- Admin preview for non-public content
-- Featured project controls and display ordering
-- SEO title and description per project
-- Project version number, lifecycle timestamps and audit events
+- Full Project CMS
+- Full Blog CMS with Tiptap rich editor
+- Draft, published and archived post lifecycle
+- Future publication timestamps for scheduled visibility
+- Category and tag CRUD
+- Public blog search, filters, category archives and tag archives
+- Article preview and revision preview
+- Immutable post revisions and restore-as-new-draft
+- Per-article SEO, Open Graph and structured data
+- Dynamic project and article sitemap entries
+- Homepage featured projects and latest insights
+- Project and post audit events
 
 ## Still static or deferred
 
-- Blog posts
-- Skills
-- Site settings
+- Skills and experience
+- Homepage and global site settings
 - Media uploads
-- Contact submissions
-- CV management
+- Profile image and CV
+- Contact submissions and email notifications
+- Analytics and WordPress migration
 
 ## Required migrations
 
 1. `202607310001_cms_foundation.sql`
 2. `202607310002_project_cms.sql`
+3. `202607310003_blog_cms.sql`

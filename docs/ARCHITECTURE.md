@@ -3,73 +3,96 @@
 ## High-level flow
 
 ```text
-Visitor
-  └── Next.js public routes
-       └── Static v0.2 portfolio data
+Public visitor
+  └── Next.js App Router
+       ├── Published project queries
+       ├── Published and due article queries
+       ├── Category and tag archives
+       └── Dynamic metadata and sitemap
 
-Owner
+Approved administrator
   └── /admin/login
        └── Google OAuth through Supabase Auth
-            └── /auth/callback exchanges the code
+            └── /auth/callback code exchange
                  └── ADMIN_EMAILS verification
                       └── Protected /admin route group
-                           └── Future CMS mutations
+                           ├── Project Server Actions
+                           ├── Blog Server Actions
+                           └── Route revalidation
 
 Database access
-  └── Supabase publishable key
-       └── Authenticated JWT
-            └── PostgreSQL Row Level Security
-                 └── private.admin_allowlist
+  └── Supabase publishable key + authenticated JWT
+       └── PostgreSQL Row Level Security
+            └── private.admin_allowlist
 ```
 
 ## Application layers
 
 ### Public presentation
 
-The homepage, projects, blog and contact pages continue to use `src/data/portfolio.ts` in v0.3.0. This preserves the stable UI while the CMS backend is introduced in controlled milestones.
+- `src/app/page.tsx`: homepage, featured projects and latest insights
+- `src/app/projects`: public project library and case studies
+- `src/app/blog`: article list, search and filters
+- `src/app/blog/[slug]`: article page and dynamic SEO
+- `src/app/blog/category/[slug]`: category archive
+- `src/app/blog/tag/[slug]`: tag archive
+- `src/app/sitemap.ts`: projects, posts and taxonomy archives
 
 ### Authentication
 
 - `src/lib/supabase/client.ts`: browser client
 - `src/lib/supabase/server.ts`: cookie-aware server client
-- `src/lib/supabase/proxy.ts`: refreshes and forwards auth cookies
+- `src/lib/supabase/proxy.ts`: auth cookie refresh
 - `src/proxy.ts`: Next.js 16 request proxy
-- `src/app/admin/login/actions.ts`: Google login and logout actions
-- `src/app/auth/callback/route.ts`: PKCE code exchange and allow-list check
+- `src/app/admin/login/actions.ts`: Google login and logout
+- `src/app/auth/callback/route.ts`: PKCE exchange and application allow-list
 - `src/lib/auth/admin.ts`: current-admin resolution and route guard
 
 ### Protected administration
-
-The public login route is outside the protected route group:
 
 ```text
 src/app/admin/login
 src/app/admin/(protected)
 ```
 
-The route group does not appear in URLs, so the protected dashboard remains `/admin`.
+The route group does not appear in URLs. `/admin`, `/admin/projects` and `/admin/posts` remain normal public URL structures protected by server layout checks.
 
-### Database
-
-The migration is stored at:
+### Project content flow
 
 ```text
-supabase/migrations/202607310001_cms_foundation.sql
+Admin project form
+  → Server Action
+  → requireAdmin()
+  → Supabase RLS
+  → project lifecycle/version trigger
+  → project audit trigger
+  → revalidatePath()
+  → public portfolio
 ```
 
-The private schema stores the database administrator allow-list. Public content tables use RLS for public reads and owner-only writes.
-
-## v0.4.0 Project content flow
+### Blog content flow
 
 ```text
-Admin form
-  → Next.js Server Action
-  → server-verified Supabase user
-  → PostgreSQL RLS write policy
-  → lifecycle/version trigger
-  → audit event trigger
-  → route revalidation
-  → published public portfolio
+Tiptap editor
+  → HTML + JSON hidden form values
+  → Server Action validation and sanitisation
+  → category and tag relation sync
+  → Supabase RLS
+  → post lifecycle/version trigger
+  → immutable revision snapshot
+  → post audit trigger
+  → revalidatePath()
+  → public article, archives, homepage and sitemap
 ```
 
-The public project queries request published rows only. RLS independently enforces the same visibility boundary.
+## Database migrations
+
+```text
+202607310001_cms_foundation.sql
+202607310002_project_cms.sql
+202607310003_blog_cms.sql
+```
+
+## Rendering and caching
+
+Server Actions call `revalidatePath()` after mutations. Public visibility is independently constrained by database RLS and explicit application query filters. Draft, future-scheduled and archived posts are never returned by public article queries.

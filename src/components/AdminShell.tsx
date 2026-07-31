@@ -36,7 +36,7 @@ export function AdminShell({
       <aside className="admin-sidebar">
         <Link href="/" className="brand admin-brand">
           <span className="brand-mark">SI</span>
-          <span><strong>Portfolio CMS</strong><small>Project CMS v0.4.0</small></span>
+          <span><strong>Portfolio CMS</strong><small>Blog CMS v0.5.0</small></span>
         </Link>
         <nav className="admin-nav" aria-label="Admin navigation">
           {adminNav.map(([label, href, icon]) => (
@@ -45,7 +45,7 @@ export function AdminShell({
         </nav>
         <div className="admin-sidebar-note cms-connected-note">
           <span className="status-dot" />
-          <div><strong>Project CMS active</strong><small>CRUD + publishing + RLS</small></div>
+          <div><strong>Blog CMS active</strong><small>Projects + posts + revisions</small></div>
         </div>
         <Link href="/" className="button button-secondary admin-view-site"><Icon name="eye" size={17} /> View website</Link>
       </aside>

@@ -4,68 +4,107 @@
 
 ### `private.admin_allowlist`
 
-Stores the exact lower-case Google email permitted to modify CMS content. It is not exposed through the generated public Data API.
+Stores normalized Google email addresses permitted to modify CMS content. The private schema is not exposed to public API roles.
 
-## Public schema
+## Public identity and settings
 
 ### `profiles`
 
-Mirrors required identity fields from `auth.users`. A trigger creates or updates the row after Google authentication.
+Mirrors required identity fields from `auth.users`.
 
 ### `site_settings`
 
 Singleton portfolio identity, social links and SEO settings.
 
-### `skill_groups`
+### `skill_groups` and `skills`
 
-Ordered skill categories with icons and active status.
+Ordered skills foundation. Public UI remains static until the skills milestone.
 
-### `skills`
-
-Skills linked to groups, including featured and learning-state flags.
+## Project CMS
 
 ### `projects`
 
-Portfolio case studies with draft/published/archive workflow, project state, stack, highlights, links and SEO fields.
+Portfolio case studies with lifecycle, project status, stack, highlights, links, SEO, case-study fields, version and timestamps.
+
+## Blog CMS
 
 ### `posts`
 
-Blog content with draft/published/archive workflow, publish time and SEO fields.
+Stores:
+
+- Slug, title and excerpt
+- Sanitised article HTML
+- Tiptap JSON
+- Legacy category label and category foreign key
+- Draft/published/archived status
+- Reading time
+- Featured image
+- SEO title and description
+- Canonical and Open Graph image URLs
+- Featured flag and sort order
+- Version, publication and archive timestamps
+
+### `post_categories`
+
+Controlled article categories with slug, description, accent and display order.
+
+### `post_tags`
+
+Controlled article tags.
+
+### `post_tag_links`
+
+Many-to-many post and tag relationship.
+
+### `post_revisions`
+
+Immutable JSON snapshots keyed by post and version. Application-generated snapshots also include `tag_ids` so relationships can be restored.
 
 ### `audit_events`
 
-Append-oriented activity records for future CMS mutations.
+Append-oriented project and post activity records.
 
-## Current seed data
+## Blog triggers
 
-The migration seeds:
+### `manage_post_lifecycle()`
 
-- Portfolio identity and social links
-- Six skill groups
-- Core current skills
-- Eight portfolio projects
-- Three planned draft articles
+- Increments version on meaningful changes
+- Sets or preserves `published_at`
+- Supports future scheduled publication
+- Sets `archived_at`
+- Clears inappropriate lifecycle timestamps
+
+### `capture_post_revision()`
+
+Captures the previous post record before the current version advances.
+
+### `audit_post_change()`
+
+Creates events including:
+
+- `post.created`
+- `post.updated`
+- `post.published`
+- `post.unpublished`
+- `post.archived`
+- `post.restored`
+- `post.deleted`
+
+The application adds `post.revision_restored` after successful restoration.
 
 ## Public read rules
 
 - Site settings: publicly readable
 - Active skills and groups: publicly readable
 - Published projects: publicly readable
-- Published and due posts: publicly readable
+- Published posts whose `published_at <= now()`: publicly readable
+- Taxonomies: publicly readable
+- Tag links: readable only when their post is public or the requester is admin
+- Revisions: admin only
 
-## Write rules
+## Delete rules
 
-All CMS writes require an authenticated JWT whose verified email exists in `private.admin_allowlist`.
-
-## v0.4.0 project fields
-
-The second migration extends `public.projects` with:
-
-- `problem_statement`
-- `solution_overview`
-- `outcomes`
-- `cover_image_url`
-- `version`
-- `archived_at`
-
-`manage_project_lifecycle()` maintains version and lifecycle timestamps. `audit_project_change()` writes immutable records to `public.audit_events`.
+- Project permanent deletion requires Archived status.
+- Post permanent deletion requires Archived status.
+- Category deletion is blocked by application logic while posts reference it.
+- Tag deletion cascades tag links but does not delete posts.

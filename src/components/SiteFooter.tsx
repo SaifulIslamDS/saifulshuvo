@@ -37,12 +37,12 @@ export function SiteFooter() {
           <span>Dhaka, Bangladesh</span>
           <span>Remote worldwide</span>
           <span>Data · BI · Web · SaaS</span>
-          <Link href="/admin">Admin UI Preview</Link>
+          <Link href="/admin">Portfolio CMS</Link>
         </div>
       </div>
       <div className="container footer-bottom">
         <span>© {new Date().getFullYear()} Saiful Islam. All rights reserved.</span>
-        <span>v0.3.0 · CMS Foundation</span>
+        <span>v0.5.0 · Full Blog CMS</span>
       </div>
     </footer>
   );
