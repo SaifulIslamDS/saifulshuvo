@@ -1,64 +1,64 @@
 # Testing Checklist
 
-## Build
+## Build and runtime
 
-- [ ] `pnpm install`
-- [ ] `pnpm typecheck`
-- [ ] `pnpm build`
-- [ ] Direct refresh works on all public and admin routes.
+- [ ] Node.js `24.18.1` is active.
+- [ ] `pnpm install` completes.
+- [ ] `pnpm typecheck` completes.
+- [ ] `pnpm build` completes.
+- [ ] Direct refresh works on public and protected routes.
 
 ## Migration
 
-- [ ] `202607310005_profile_homepage_cms.sql` runs once without error.
-- [ ] `experience_entries` and `services` exist with RLS enabled.
-- [ ] New `site_settings`, `skill_groups` and `skills` columns exist.
-- [ ] Existing projects, posts, media, CV and authentication remain intact.
+- [ ] `202607310006_contact_inbox.sql` runs once without error.
+- [ ] `contact_messages` exists with RLS enabled.
+- [ ] `submit_contact_message` is executable by `anon` and `authenticated`.
+- [ ] `finalize_contact_notification` is executable by `anon` and `authenticated`.
+- [ ] Anonymous direct table reads and writes are rejected.
+- [ ] Existing profile, skills, experience, project, blog, media and CV data remain intact.
 
-## Homepage CMS
+## Public contact form
 
-- [ ] Identity, social, hero, About, statistics, process and CTA fields save.
-- [ ] Public homepage updates after save.
-- [ ] Header and footer use the managed owner, contact and social data.
-- [ ] Each homepage section can be hidden and restored without data loss.
-- [ ] Internal paths and external URLs validate correctly.
-- [ ] `site_settings.version` increments after updates.
+- [ ] Required-field validation works.
+- [ ] Invalid email is rejected.
+- [ ] Message shorter than 20 characters is rejected.
+- [ ] Valid submission shows success feedback and resets the form.
+- [ ] Valid submission appears in `/admin/inbox`.
+- [ ] Honeypot submissions are rejected.
+- [ ] Rapid automated submission is rejected.
+- [ ] Fourth submission from the same fingerprint within fifteen minutes is rate-limited.
+- [ ] Raw IP addresses are not stored in `contact_messages`.
+- [ ] Form remains usable on desktop, tablet and mobile.
 
-## Services
+## Inbox
 
-- [ ] Service create and edit work.
-- [ ] Icon, accent, order and visibility render publicly.
-- [ ] Hidden service disappears from the homepage.
-- [ ] Active service cannot be permanently deleted through the UI.
-- [ ] Hidden service can be permanently deleted.
+- [ ] Dashboard inbox count and unread count are correct.
+- [ ] Search works for name, email, company, subject and topic.
+- [ ] Status filters work.
+- [ ] Pagination works with more than twenty records.
+- [ ] Message detail shows sender, topic, source, body and timeline.
+- [ ] Notes and priority save.
+- [ ] Unread, read, replied, archived and spam transitions work.
+- [ ] Reply-by-email link is correctly prefilled.
+- [ ] Archived/spam message can be restored.
+- [ ] Active message cannot be permanently deleted through the UI.
+- [ ] Archived/spam message can be permanently deleted.
 
-## Skills
+## Email notifications
 
-- [ ] Skill group create and edit work.
-- [ ] Skill create, edit and group reassignment work.
-- [ ] Featured skills appear in the primary stack.
-- [ ] Learning labels render honestly.
-- [ ] Hidden groups and skills disappear publicly.
-- [ ] Hidden skills can be deleted.
-- [ ] Non-empty groups cannot be deleted.
-
-## Experience
-
-- [ ] Experience create and edit work.
-- [ ] Current entry clears its end date.
-- [ ] End date earlier than start date is rejected.
-- [ ] Featured visible entries render on the homepage in order.
-- [ ] Hidden entries disappear publicly and can be deleted.
+- [ ] Without email variables, submission is saved with `skipped` status.
+- [ ] With valid Resend variables, notification is delivered.
+- [ ] Notification reply-to uses the visitor email.
+- [ ] Notification links to the correct admin inbox detail.
+- [ ] Invalid provider configuration records `failed` status and error detail.
+- [ ] Retry succeeds after configuration is corrected.
+- [ ] Duplicate provider sends are prevented by the idempotency key.
 
 ## Security and audit
 
-- [ ] Non-admin users cannot access new admin routes.
-- [ ] Anonymous database writes are rejected.
-- [ ] Audit events are created for homepage, service, skill and experience changes.
-- [ ] Hidden skill records in hidden groups are not anonymously readable.
-
-## Responsive and themes
-
-- [ ] `/admin/homepage`, `/admin/skills` and `/admin/experience` work on desktop, tablet and mobile.
-- [ ] Public homepage remains responsive with 1–6 service cards and 1–4 statistics.
-- [ ] Light and dark mode contrast remains readable.
+- [ ] Non-admin users cannot access `/admin/inbox`.
+- [ ] Only allow-listed admins can read/update/delete contact records.
+- [ ] Contact received, updated, status, retry and delete audit events are created.
+- [ ] Sensitive variables are not committed to Git.
+- [ ] Light and dark theme contrast is readable.
 - [ ] No horizontal overflow occurs.

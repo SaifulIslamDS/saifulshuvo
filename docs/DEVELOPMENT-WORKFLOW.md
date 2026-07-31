@@ -25,3 +25,8 @@ Only `README.md` remains in the project root. Every other Markdown file belongs 
 - Patch: fixes without new user-facing capability
 - Minor: new bounded capability or milestone
 - Major: production-ready architectural or product boundary change
+
+
+## Runtime baseline
+
+v0.8.0 and later use Node.js `24.18.1` LTS, declared in `.nvmrc`, `package.json` engines and `netlify.toml`. Keep local and Netlify runtimes aligned before auditing a release.

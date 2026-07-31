@@ -4,24 +4,26 @@ A mobile-responsive personal portfolio and single-owner CMS built with Next.js, 
 
 ## Current release
 
-**v0.7.0 — Skills, Experience and Homepage CMS**
+**v0.8.0 — Contact Inbox and Email Notifications**
 
-The CMS now manages public positioning, hero and About copy, homepage statistics, services, process and CTA sections, section visibility, skill groups and individual skills, and the professional experience timeline. Project, blog, media, profile-image and CV modules remain integrated.
+The public contact form now stores validated enquiries in a private Supabase-backed inbox. The administrator can review, prioritise, annotate, reply, archive and delete messages, while optional Resend notifications provide immediate delivery alerts without risking message loss when the email provider is unavailable.
 
 ## Stack
 
 - Next.js 16 App Router and React 19
 - TypeScript
+- Node.js 24 LTS and pnpm 11
 - Supabase Auth, PostgreSQL, Storage and Row Level Security
 - Supabase SSR cookie sessions
 - Tiptap rich-text editor
+- Resend Email API for optional contact notifications
 - Netlify deployment
-- pnpm 11
 
 ## Local setup
 
 ```powershell
-nvm use 22.23.2
+nvm install 24.18.1
+nvm use 24.18.1
 corepack enable
 corepack prepare pnpm@11.18.0 --activate
 pnpm install
@@ -39,16 +41,19 @@ supabase/migrations/202607310002_project_cms.sql
 supabase/migrations/202607310003_blog_cms.sql
 supabase/migrations/202607310004_media_library.sql
 supabase/migrations/202607310005_profile_homepage_cms.sql
+supabase/migrations/202607310006_contact_inbox.sql
 ```
 
 ## Important routes
 
 ```text
 /
+/contact
 /cv
 /projects
 /blog
 /admin
+/admin/inbox
 /admin/homepage
 /admin/skills
 /admin/experience
@@ -64,7 +69,7 @@ All documentation except this README is stored in [`docs/`](./docs/README.md).
 
 Start with:
 
-1. [`docs/UPGRADE-v0.7.0.md`](./docs/UPGRADE-v0.7.0.md)
-2. [`docs/PROFILE-HOMEPAGE-CMS.md`](./docs/PROFILE-HOMEPAGE-CMS.md)
+1. [`docs/UPGRADE-v0.8.0.md`](./docs/UPGRADE-v0.8.0.md)
+2. [`docs/CONTACT-INBOX.md`](./docs/CONTACT-INBOX.md)
 3. [`docs/TESTING-CHECKLIST.md`](./docs/TESTING-CHECKLIST.md)
-4. [`docs/RELEASE-NOTES-v0.7.0.md`](./docs/RELEASE-NOTES-v0.7.0.md)
+4. [`docs/RELEASE-NOTES-v0.8.0.md`](./docs/RELEASE-NOTES-v0.8.0.md)

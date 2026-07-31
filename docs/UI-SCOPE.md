@@ -48,3 +48,12 @@
 - Experience library plus dedicated create/edit screens.
 - Service-card management inside the homepage workspace.
 - Dynamic public header, footer and homepage content.
+
+
+## v0.8.0 Contact Operations
+
+- Functional public contact form with success/error states.
+- Responsive private admin inbox.
+- Search, filters, workflow badges, priority and private notes.
+- Message detail, reply link, timeline and notification retry.
+- Light and dark theme coverage.

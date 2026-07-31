@@ -41,6 +41,10 @@ const paths: Record<string, ReactNode> = {
   image: <><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m21 15-5-5L5 20"/></>,
   copy: <><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></>,
   archive: <><path d="M4 7h16v13H4z"/><path d="M3 3h18v4H3zM9 11h6"/></>,
+  inbox: <><path d="M4 4h16v16H4z"/><path d="M4 14h4l2 3h4l2-3h4"/></>,
+  alert: <><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 9v4m0 3v.01"/></>,
+  reply: <><path d="m9 8-5 4 5 4"/><path d="M4 12h9a7 7 0 0 1 7 7"/></>,
+  "arrow-left": <path d="M19 12H5m5-5-5 5 5 5" />,
   restore: <><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>,
   trash: <><path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6m4-6v6"/></>,
 };

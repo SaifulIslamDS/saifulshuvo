@@ -6,8 +6,13 @@
 - `site_settings`
 - `skill_groups`
 - `skills`
+- `experience_entries`
+- `services`
 - `projects`
 - `posts`
+- `media_assets`
+- `cv_documents`
+- `contact_messages`
 - `audit_events`
 
 ## Project CMS
@@ -43,22 +48,37 @@ The function `media_asset_usage_count(uuid)` protects assigned media from archiv
 
 ## Profile and Homepage CMS
 
-### Extended `site_settings`
+### `site_settings`
 
-Stores public identity, social links, hero, About, statistics, professional positioning, process, work principles, CTA content, homepage section visibility and a monotonically increasing content version.
+Stores public identity, social links, hero, About, statistics, professional positioning, process, work principles, CTA content, section visibility and a content version.
 
-### Extended `skill_groups`
+### `skill_groups` and `skills`
 
-Adds description, accent and homepage-feature controls.
-
-### Extended `skills`
-
-Adds description, proficiency level, years of experience and optional evidence URL while retaining learning, featured, active and ordering controls.
+Store grouped public capabilities, proficiency, experience, learning, evidence, visibility and ordering metadata.
 
 ### `experience_entries`
 
-Stores role, organisation, dates, public period label, summary, achievements, technologies, featured status, public visibility and display order.
+Stores role, organisation, dates, public period label, summary, achievements, technologies, featured status, visibility and display order.
 
 ### `services`
 
 Stores homepage capability cards with title, icon, description, accent, visibility and display order.
+
+## Contact Inbox
+
+### `contact_messages`
+
+Stores:
+
+- Visitor name, email and optional company.
+- Subject, discussion topic and message.
+- Source page.
+- Workflow status and priority.
+- Private admin notes.
+- One-way request fingerprint.
+- Notification status, provider ID and error.
+- Read, replied and archived timestamps.
+
+Anonymous users receive no direct table privileges. The `submit_contact_message(...)` security-definer function validates and rate-limits public inserts. `finalize_contact_notification(...)` allows the originating Server Action to record one notification result using a one-time unguessable token.
+
+Indexes support inbox status, email, fingerprint, notification status and newest-first access.

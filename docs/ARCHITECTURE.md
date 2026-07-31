@@ -5,10 +5,14 @@
 ```text
 Public visitor
   └── Next.js App Router
-       ├── Published project queries
-       ├── Published and due article queries
-       ├── Category and tag archives
-       └── Dynamic metadata and sitemap
+       ├── Database-driven homepage, projects and articles
+       ├── Media and active CV delivery
+       └── Contact Server Action
+            ├── field, honeypot and timing validation
+            ├── SHA-256 request fingerprint
+            ├── rate-limited Supabase RPC
+            ├── contact_messages insert
+            └── optional Resend notification
 
 Approved administrator
   └── /admin/login
@@ -16,94 +20,87 @@ Approved administrator
             └── /auth/callback code exchange
                  └── ADMIN_EMAILS verification
                       └── Protected /admin route group
-                           ├── Project Server Actions
-                           ├── Blog Server Actions
-                           ├── Media and CV Server Actions
-                           └── Route revalidation
+                           ├── Project and Blog CMS
+                           ├── Media, profile and CV CMS
+                           ├── Homepage, Skills and Experience CMS
+                           └── Contact Inbox
 
 Database access
   └── Supabase publishable key + authenticated JWT
        ├── PostgreSQL Row Level Security
        │    └── private.admin_allowlist
+       ├── validated anonymous contact RPC
        └── Supabase Storage policies
             └── portfolio-media bucket
 ```
 
-## Application layers
+## Public presentation
 
-### Public presentation
+- `src/app/page.tsx`: homepage, featured projects and latest insights.
+- `src/app/projects`: public project library and case studies.
+- `src/app/blog`: article list, search, filters and public archives.
+- `src/app/cv`: active CV redirect.
+- `src/app/contact`: public enquiry form.
+- `src/app/sitemap.ts`: public project, article and taxonomy routes.
 
-- `src/app/page.tsx`: homepage, featured projects and latest insights
-- `src/app/projects`: public project library and case studies
-- `src/app/blog`: article list, search and filters
-- `src/app/blog/[slug]`: article page and dynamic SEO
-- `src/app/blog/category/[slug]`: category archive
-- `src/app/blog/tag/[slug]`: tag archive
-- `src/app/cv`: active CV redirect
-- `src/app/sitemap.ts`: projects, posts and taxonomy archives
+## Authentication
 
-### Authentication
+- `src/lib/supabase/client.ts`: browser client.
+- `src/lib/supabase/server.ts`: cookie-aware server client.
+- `src/lib/supabase/proxy.ts`: auth cookie refresh.
+- `src/proxy.ts`: Next.js request proxy.
+- `src/app/admin/login/actions.ts`: Google login and logout.
+- `src/app/auth/callback/route.ts`: PKCE exchange and application allow-list.
+- `src/lib/auth/admin.ts`: current-admin resolution and route guard.
 
-- `src/lib/supabase/client.ts`: browser client
-- `src/lib/supabase/server.ts`: cookie-aware server client
-- `src/lib/supabase/proxy.ts`: auth cookie refresh
-- `src/proxy.ts`: Next.js 16 request proxy
-- `src/app/admin/login/actions.ts`: Google login and logout
-- `src/app/auth/callback/route.ts`: PKCE exchange and application allow-list
-- `src/lib/auth/admin.ts`: current-admin resolution and route guard
-
-### Protected administration
+## Protected administration
 
 ```text
-src/app/admin/login
-src/app/admin/(protected)
+/admin
+/admin/projects
+/admin/posts
+/admin/inbox
+/admin/homepage
+/admin/skills
+/admin/experience
+/admin/media
+/admin/settings
 ```
 
-The route group does not appear in URLs. ``/admin`, `/admin/projects`, `/admin/posts`, `/admin/media` and `/admin/settings` remain normal URL structures protected by server layout checks.
+Every mutation verifies authorization inside its Server Action. Database RLS independently enforces admin access.
 
-### Project content flow
+## Contact flow
 
 ```text
-Admin project form
-  → Server Action
-  → requireAdmin()
+ContactForm client component
+  → useActionState
+  → submitContactAction
+  → Next.js request headers
+  → one-way fingerprint hash
+  → submit_contact_message()
+       ├── validation
+       ├── duplicate protection
+       └── database rate limit
+  → sendContactNotification()
+       └── Resend REST API with idempotency key
+  → finalize_contact_notification()
+```
+
+The notification API is called with native `fetch`, avoiding an additional runtime dependency. Database capture is the source of truth; email is a secondary alert channel.
+
+## Content flows
+
+Project, blog, media and profile mutations follow this pattern:
+
+```text
+Admin form
+  → authenticated Server Action
+  → validation and normalisation
   → Supabase RLS
-  → project lifecycle/version trigger
-  → project audit trigger
+  → audit event / lifecycle trigger
   → revalidatePath()
-  → public portfolio
+  → public server rendering
 ```
-
-### Blog content flow
-
-```text
-Tiptap editor
-  → HTML + JSON hidden form values
-  → Server Action validation and sanitisation
-  → category and tag relation sync
-  → Supabase RLS
-  → post lifecycle/version trigger
-  → immutable revision snapshot
-  → post audit trigger
-  → revalidatePath()
-  → public article, archives, homepage and sitemap
-```
-
-
-### Media content flow
-
-```text
-Admin upload form
-  → Server MIME/size validation
-  → SHA-256 duplicate check
-  → Supabase Storage upload
-  → media_assets metadata insert
-  → assignment to profile, CV, project or post
-  → RLS + lifecycle usage protection
-  → public page revalidation
-```
-
-Media assignment uses database foreign keys while legacy public URL columns remain synchronised for backward compatibility.
 
 ## Database migrations
 
@@ -112,23 +109,6 @@ Media assignment uses database foreign keys while legacy public URL columns rema
 202607310002_project_cms.sql
 202607310003_blog_cms.sql
 202607310004_media_library.sql
+202607310005_profile_homepage_cms.sql
+202607310006_contact_inbox.sql
 ```
-
-## Rendering and caching
-
-Server Actions call `revalidatePath()` after mutations. Public visibility is independently constrained by database RLS and explicit application query filters. Draft, future-scheduled and archived posts are never returned by public article queries.
-
-
-## Profile and Homepage content flow
-
-```text
-Admin forms
-  → authenticated Server Actions
-  → input and URL validation
-  → Supabase tables protected by admin RLS
-  → audit event
-  → revalidatePath('/')
-  → public server components read active profile content
-```
-
-`site_settings` owns singleton homepage content. Normalized tables own repeatable skills, experience and service cards. The public query layer retains static fallbacks for UI development before Supabase configuration.

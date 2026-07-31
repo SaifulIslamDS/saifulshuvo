@@ -221,3 +221,14 @@ where id = 'primary';
 ```
 
 No service-role key, new package or new environment variable is required.
+
+
+## v0.8.0 contact migration
+
+After the profile/homepage migration, apply:
+
+```text
+supabase/migrations/202607310006_contact_inbox.sql
+```
+
+This creates the private inbox table and two public RPC functions. Anonymous clients receive no direct table access.

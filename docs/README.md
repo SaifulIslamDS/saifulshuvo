@@ -17,6 +17,7 @@
 - [Blog CMS](./BLOG-CMS.md)
 - [Media Library](./MEDIA-LIBRARY.md)
 - [Skills, Experience and Homepage CMS](./PROFILE-HOMEPAGE-CMS.md)
+- [Contact Inbox and Email Notifications](./CONTACT-INBOX.md)
 - [Supabase Setup](./SUPABASE-SETUP.md)
 
 ## Upgrade guides
@@ -27,6 +28,7 @@
 - [v0.5.0](./UPGRADE-v0.5.0.md)
 - [v0.6.0](./UPGRADE-v0.6.0.md)
 - [v0.7.0](./UPGRADE-v0.7.0.md)
+- [v0.8.0](./UPGRADE-v0.8.0.md)
 
 ## Release notes
 
@@ -36,3 +38,4 @@
 - [v0.5.0](./RELEASE-NOTES-v0.5.0.md)
 - [v0.6.0](./RELEASE-NOTES-v0.6.0.md)
 - [v0.7.0](./RELEASE-NOTES-v0.7.0.md)
+- [v0.8.0](./RELEASE-NOTES-v0.8.0.md)
