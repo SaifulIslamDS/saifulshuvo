@@ -1,6 +1,8 @@
 import { ImageResponse } from "next/og";
 import { getHomepageContent } from "@/lib/wordpress/queries/profile";
 
+export const dynamic = "force-static";
+
 export const alt = "Saiful Islam — Data Analyst and AI-Focused Software Builder";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

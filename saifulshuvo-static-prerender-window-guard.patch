@@ -1,0 +1,16 @@
+diff -ruN a/src/components/AnalyticsManager.tsx b/src/components/AnalyticsManager.tsx
+--- a/src/components/AnalyticsManager.tsx	2026-08-22 02:24:21.642786288 +0000
++++ b/src/components/AnalyticsManager.tsx	2026-08-22 02:24:21.643903199 +0000
+@@ -99,7 +99,11 @@
+   const sessionId = useMemo(() => typeof window === "undefined" ? "" : getSessionId(), []);
+   const firstNavigation = useRef(true);
+ 
+-  const dntEnabled = typeof navigator !== "undefined" && (navigator.doNotTrack === "1" || (window as unknown as { doNotTrack?: string }).doNotTrack === "1");
++  const dntEnabled =
++    typeof navigator !== "undefined" &&
++    (navigator.doNotTrack === "1" ||
++      (typeof window !== "undefined" &&
++        (window as unknown as { doNotTrack?: string }).doNotTrack === "1"));
+   const analyticsConfigured = settings.analyticsProvider !== "none" || settings.collectPageViews || settings.collectWebVitals || settings.collectClientErrors;
+   const allowedByPrivacy = !(settings.respectDnt && dntEnabled);
+   const allowed = analyticsConfigured && allowedByPrivacy && (!settings.consentRequired || consent === "granted");

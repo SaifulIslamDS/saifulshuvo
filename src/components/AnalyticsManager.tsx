@@ -99,7 +99,11 @@ export function AnalyticsManager({ settings }: { settings: SeoAnalyticsSettings 
   const sessionId = useMemo(() => typeof window === "undefined" ? "" : getSessionId(), []);
   const firstNavigation = useRef(true);
 
-  const dntEnabled = typeof navigator !== "undefined" && (navigator.doNotTrack === "1" || (window as unknown as { doNotTrack?: string }).doNotTrack === "1");
+  const dntEnabled =
+    typeof navigator !== "undefined" &&
+    (navigator.doNotTrack === "1" ||
+      (typeof window !== "undefined" &&
+        (window as unknown as { doNotTrack?: string }).doNotTrack === "1"));
   const analyticsConfigured = settings.analyticsProvider !== "none" || settings.collectPageViews || settings.collectWebVitals || settings.collectClientErrors;
   const allowedByPrivacy = !(settings.respectDnt && dntEnabled);
   const allowed = analyticsConfigured && allowedByPrivacy && (!settings.consentRequired || consent === "granted");

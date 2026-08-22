@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { getSeoAnalyticsSettings } from "@/lib/wordpress/queries/seo";
 import { getSiteUrl } from "@/lib/wordpress/env";
 
+export const dynamic = "force-static";
+
 export default async function robots(): Promise<MetadataRoute.Robots> {
   const [settings, siteUrl] = await Promise.all([getSeoAnalyticsSettings(false), Promise.resolve(getSiteUrl())]);
   if (!settings.indexSite) return { rules: [{ userAgent: "*", disallow: "/" }] };

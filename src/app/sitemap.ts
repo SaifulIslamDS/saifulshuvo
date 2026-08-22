@@ -4,6 +4,8 @@ import { getPublicProjects } from "@/lib/wordpress/queries/projects";
 import { getSiteUrl } from "@/lib/wordpress/env";
 import { getSeoAnalyticsSettings } from "@/lib/wordpress/queries/seo";
 
+export const dynamic = "force-static";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getSiteUrl();
   const [settings, projects, posts, taxonomies] = await Promise.all([getSeoAnalyticsSettings(false), getPublicProjects(), getAllPublicPosts(), getPostTaxonomies()]);
