@@ -4,6 +4,7 @@ import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useReportWebVitals } from "next/web-vitals";
+import { postWordPressRest } from "@/lib/wordpress/rest";
 import type { SeoAnalyticsSettings } from "@/types/seo";
 
 const CONSENT_KEY = "portfolio-analytics-consent";
@@ -11,16 +12,6 @@ const SESSION_KEY = "portfolio-telemetry-session";
 
 type ConsentState = "unknown" | "granted" | "denied";
 type WebVitalMetric = { id: string; name: string; value: number; rating?: "good" | "needs-improvement" | "poor"; navigationType?: string };
-
-type TelemetryPayload = {
-  eventType: "page_view" | "web_vital" | "client_error";
-  path: string;
-  sessionId: string;
-  metricName?: string;
-  metricValue?: number;
-  metricRating?: string;
-  metadata?: Record<string, unknown>;
-};
 
 declare global {
   interface Window {
@@ -42,23 +33,53 @@ function getSessionId(): string {
   }
 }
 
-async function sendTelemetry(payload: TelemetryPayload): Promise<void> {
+async function sendAnalytics(payload: { event: string; path: string; sessionId: string; referrer?: string; metadata?: Record<string, unknown> }): Promise<void> {
   try {
-    await fetch("/api/telemetry", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
-      keepalive: true,
-      cache: "no-store",
+    await postWordPressRest("/analytics", {
+      event: payload.event,
+      path: payload.path,
+      session_id: payload.sessionId,
+      referrer: payload.referrer || "",
+      metadata: payload.metadata || {},
     });
   } catch {
     // Analytics must never interrupt the portfolio experience.
   }
 }
 
-function safeReferrerHostname(): string | undefined {
+async function sendWebVital(payload: { name: string; value: number; rating?: string; path: string; sessionId: string; metadata?: Record<string, unknown> }): Promise<void> {
+  try {
+    await postWordPressRest("/web-vitals", {
+      name: payload.name,
+      value: payload.value,
+      rating: payload.rating || "",
+      path: payload.path,
+      session_id: payload.sessionId,
+      metadata: payload.metadata || {},
+    });
+  } catch {
+    // Web Vital collection is best effort.
+  }
+}
+
+async function sendClientError(payload: { message: string; source: string; stack?: string; path: string; sessionId: string }): Promise<void> {
+  try {
+    await postWordPressRest("/errors", {
+      type: payload.source || "client_error",
+      message: payload.message,
+      path: payload.path,
+      stack: payload.stack || "",
+      session_id: payload.sessionId,
+      metadata: { source: payload.source },
+    });
+  } catch {
+    // Error telemetry must never cause another user-facing error.
+  }
+}
+
+function safeReferrer(): string | undefined {
   if (!document.referrer) return undefined;
-  try { return new URL(document.referrer).hostname; }
+  try { return new URL(document.referrer).toString().slice(0, 500); }
   catch { return undefined; }
 }
 
@@ -81,8 +102,7 @@ export function AnalyticsManager({ settings }: { settings: SeoAnalyticsSettings 
   const dntEnabled = typeof navigator !== "undefined" && (navigator.doNotTrack === "1" || (window as unknown as { doNotTrack?: string }).doNotTrack === "1");
   const analyticsConfigured = settings.analyticsProvider !== "none" || settings.collectPageViews || settings.collectWebVitals || settings.collectClientErrors;
   const allowedByPrivacy = !(settings.respectDnt && dntEnabled);
-  const publicRoute = !pathname.startsWith("/admin") && !pathname.startsWith("/auth");
-  const allowed = publicRoute && analyticsConfigured && allowedByPrivacy && (!settings.consentRequired || consent === "granted");
+  const allowed = analyticsConfigured && allowedByPrivacy && (!settings.consentRequired || consent === "granted");
 
   useEffect(() => {
     setConsent(consentFromStorage(settings.consentRequired));
@@ -97,9 +117,9 @@ export function AnalyticsManager({ settings }: { settings: SeoAnalyticsSettings 
   }, []);
 
   useEffect(() => {
-    if (!allowed || !settings.collectPageViews || !sessionId || pathname.startsWith("/admin")) return;
+    if (!allowed || !settings.collectPageViews || !sessionId) return;
     const path = `${pathname}${window.location.search}`;
-    void sendTelemetry({ eventType: "page_view", path, sessionId, metadata: { referrer: safeReferrerHostname() } });
+    void sendAnalytics({ event: "page_view", path, sessionId, referrer: safeReferrer(), metadata: {} });
 
     if (settings.analyticsProvider === "google" && settings.analyticsMeasurementId && window.gtag) {
       window.gtag("config", settings.analyticsMeasurementId, { page_path: path });
@@ -114,15 +134,12 @@ export function AnalyticsManager({ settings }: { settings: SeoAnalyticsSettings 
     if (!allowed || !settings.collectClientErrors || !sessionId) return;
     const listener = (event: Event) => {
       const detail = (event as CustomEvent<{ message?: string; source?: string; stack?: string }>).detail ?? {};
-      void sendTelemetry({
-        eventType: "client_error",
+      void sendClientError({
+        message: String(detail.message ?? "Unknown client error").slice(0, 500),
+        source: String(detail.source ?? "client").slice(0, 120),
+        stack: String(detail.stack ?? "").slice(0, 1500),
         path: window.location.pathname,
         sessionId,
-        metadata: {
-          message: String(detail.message ?? "Unknown client error").slice(0, 500),
-          source: String(detail.source ?? "client").slice(0, 120),
-          stack: String(detail.stack ?? "").slice(0, 1500),
-        },
       });
     };
     window.addEventListener("portfolio:client-error", listener);
@@ -130,21 +147,20 @@ export function AnalyticsManager({ settings }: { settings: SeoAnalyticsSettings 
   }, [allowed, sessionId, settings.collectClientErrors]);
 
   const reportMetric = useCallback((metric: WebVitalMetric) => {
-    if (!allowed || !settings.collectWebVitals || !sessionId || pathname.startsWith("/admin")) return;
-    void sendTelemetry({
-      eventType: "web_vital",
+    if (!allowed || !settings.collectWebVitals || !sessionId) return;
+    void sendWebVital({
+      name: metric.name,
+      value: metric.value,
+      rating: metric.rating,
       path: pathname,
       sessionId,
-      metricName: metric.name,
-      metricValue: metric.value,
-      metricRating: metric.rating,
       metadata: { id: metric.id, navigationType: metric.navigationType },
     });
   }, [allowed, pathname, sessionId, settings.collectWebVitals]);
 
   useReportWebVitals(reportMetric);
 
-  const showConsent = publicRoute && analyticsConfigured && settings.consentRequired && allowedByPrivacy && consent === "unknown";
+  const showConsent = analyticsConfigured && settings.consentRequired && allowedByPrivacy && consent === "unknown";
 
   return (
     <>
