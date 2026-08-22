@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { AnalyticsManager } from "@/components/AnalyticsManager";
-import { getSeoAnalyticsSettings } from "@/lib/seo/queries";
-import { getSiteUrl } from "@/lib/supabase/env";
+import { getSeoAnalyticsSettings } from "@/lib/wordpress/queries/seo";
+import { getSiteUrl } from "@/lib/wordpress/env";
 import "./globals.css";
 
 const themeScript = `

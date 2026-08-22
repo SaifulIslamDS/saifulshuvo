@@ -2,19 +2,13 @@ import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import type { PortfolioProject } from "@/types/project";
 
-export function ProjectCaseStudy({ project, preview = false }: { project: PortfolioProject; preview?: boolean }) {
+export function ProjectCaseStudy({ project }: { project: PortfolioProject }) {
   return (
     <>
-      {preview ? (
-        <div className="preview-banner">
-          <div><strong>Admin preview</strong><span>This project is currently {project.publicationStatus}.</span></div>
-          <div><Link className="button button-secondary" href={`/admin/projects/${project.id}/edit`}>Edit project</Link><Link className="button button-ghost" href="/admin/projects">Back to projects</Link></div>
-        </div>
-      ) : null}
       <section className={`case-hero section-shell accent-${project.accent}`}>
         <div className="container case-hero-grid">
           <div>
-            {!preview ? <Link href="/projects" className="back-link">← Back to projects</Link> : null}
+            <Link href="/projects" className="back-link">← Back to projects</Link>
             <div className="project-meta large">
               <span>{project.category}</span>
               <span className={`status status-${project.projectState.replaceAll("_", "-")}`}>{project.status}</span>
@@ -27,7 +21,7 @@ export function ProjectCaseStudy({ project, preview = false }: { project: Portfo
             <div className="hero-actions">
               {project.liveUrl ? <a className="button button-primary" href={project.liveUrl} target="_blank" rel="noreferrer">View live project <Icon name="external" size={17}/></a> : null}
               {project.sourceUrl ? <a className={project.liveUrl ? "button button-secondary" : "button button-primary"} href={project.sourceUrl} target="_blank" rel="noreferrer">View source <Icon name="github" size={17}/></a> : null}
-              {!preview ? <Link className="button button-secondary" href="/contact">Discuss this work</Link> : null}
+              <Link className="button button-secondary" href="/contact">Discuss this work</Link>
             </div>
           </div>
           <div className="case-visual">

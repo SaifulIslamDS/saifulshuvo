@@ -7,14 +7,13 @@ function formatDate(value?: string): string {
   return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" }).format(new Date(value));
 }
 
-export function PostArticle({ post, preview = false }: { post: BlogPost; preview?: boolean }) {
+export function PostArticle({ post }: { post: BlogPost }) {
   return (
     <article className="post-article">
       <header className="post-hero">
         <div className="post-breadcrumb"><Link href="/blog">Insights</Link><span>/</span><span>{post.categoryLabel}</span></div>
         <div className="post-taxonomy-row">
           {post.category ? <Link href={`/blog/category/${post.category.slug}`}>{post.category.name}</Link> : <span>{post.categoryLabel}</span>}
-          {preview ? <span className={`publication-badge publication-${post.publicationStatus}`}>{post.publicationStatus}</span> : null}
         </div>
         <h1>{post.title}</h1>
         <p>{post.excerpt}</p>

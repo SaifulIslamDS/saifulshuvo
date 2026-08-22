@@ -4,10 +4,16 @@ import { ProjectCaseStudy } from "@/components/ProjectCaseStudy";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { getPublicProjectBySlug } from "@/lib/projects/queries";
-import { getSiteUrl } from "@/lib/supabase/env";
+import { getPublicProjectBySlug, getPublicProjectSlugs } from "@/lib/wordpress/queries/projects";
+import { getSiteUrl } from "@/lib/wordpress/env";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  return (await getPublicProjectSlugs()).map((slug) => ({ slug }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

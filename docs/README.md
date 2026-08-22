@@ -1,45 +1,11 @@
-# Portfolio Documentation
+# Documentation Index
 
-## Current
+Current architecture:
 
-- [Current Status](./CURRENT-STATUS.md)
-- [Architecture](./ARCHITECTURE.md)
-- [Database Schema](./DATABASE-SCHEMA.md)
-- [Security](./SECURITY.md)
-- [Deployment](./DEPLOYMENT.md)
-- [Development Workflow](./DEVELOPMENT-WORKFLOW.md)
-- [Testing Checklist](./TESTING-CHECKLIST.md)
-- [Production Checklist](./PRODUCTION-CHECKLIST.md)
-- [Roadmap](./ROADMAP.md)
+- [Development Summary](DEVELOPMENT-SUMMARY.md)
+- [Continuation Roadmap](CONTINUATION-ROADMAP.md)
+- [cPanel Static Deployment](CPANEL-STATIC-DEPLOYMENT.md)
+- [WordPress Frontend Contract](WORDPRESS-CONTRACT.md)
+- [Static WordPress Migration Audit](reference/STATIC-WORDPRESS-MIGRATION-AUDIT-v1.md)
 
-## Feature guides
-
-- [Project CMS](./PROJECT-CMS.md)
-- [Blog CMS](./BLOG-CMS.md)
-- [Media Library](./MEDIA-LIBRARY.md)
-- [Skills, Experience and Homepage CMS](./PROFILE-HOMEPAGE-CMS.md)
-- [Contact Inbox and Email Notifications](./CONTACT-INBOX.md)
-- [SEO, Analytics and Hardening](./SEO-ANALYTICS-HARDENING.md)
-- [Supabase Setup](./SUPABASE-SETUP.md)
-
-## Upgrade guides
-
-- [v0.2.0](./UPGRADE-v0.2.0.md)
-- [v0.3.0](./UPGRADE-v0.3.0.md)
-- [v0.4.0](./UPGRADE-v0.4.0.md)
-- [v0.5.0](./UPGRADE-v0.5.0.md)
-- [v0.6.0](./UPGRADE-v0.6.0.md)
-- [v0.7.0](./UPGRADE-v0.7.0.md)
-- [v0.8.0](./UPGRADE-v0.8.0.md)
-- [v0.9.0](./UPGRADE-v0.9.0.md)
-
-## Release notes
-
-- [v0.2.0](./RELEASE-NOTES-v0.2.0.md)
-- [v0.3.0](./RELEASE-NOTES-v0.3.0.md)
-- [v0.4.0](./RELEASE-NOTES-v0.4.0.md)
-- [v0.5.0](./RELEASE-NOTES-v0.5.0.md)
-- [v0.6.0](./RELEASE-NOTES-v0.6.0.md)
-- [v0.7.0](./RELEASE-NOTES-v0.7.0.md)
-- [v0.8.0](./RELEASE-NOTES-v0.8.0.md)
-- [v0.9.0](./RELEASE-NOTES-v0.9.0.md)
+Historical Supabase/Netlify documentation is retained under [`legacy-supabase-v0.9.0/`](legacy-supabase-v0.9.0/) for audit/history only. It is not the current implementation guide.

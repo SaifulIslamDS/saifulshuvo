@@ -8,11 +8,11 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { getPublicPosts } from "@/lib/posts/queries";
-import { getPublicProjects } from "@/lib/projects/queries";
-import { getPublicSiteMedia } from "@/lib/media/queries";
-import { getExperienceEntries, getHomepageContent, getServices, getSkillGroups } from "@/lib/profile/queries";
-import { getSiteUrl } from "@/lib/supabase/env";
+import { getPublicPosts } from "@/lib/wordpress/queries/posts";
+import { getPublicProjects } from "@/lib/wordpress/queries/projects";
+import { getPublicSiteMedia } from "@/lib/wordpress/queries/media";
+import { getExperienceEntries, getHomepageContent, getServices, getSkillGroups } from "@/lib/wordpress/queries/profile";
+import { getSiteUrl } from "@/lib/wordpress/env";
 
 function SmartLink({ href, className, children }: { href: string; className: string; children: ReactNode }) {
   return href.startsWith("/") ? <Link href={href} className={className}>{children}</Link> : <a href={href} className={className} target="_blank" rel="noreferrer">{children}</a>;
@@ -67,7 +67,7 @@ export default async function HomePage() {
               <div className="hero-actions">
                 <SmartLink href={content.heroPrimaryHref} className="button button-primary">{content.heroPrimaryLabel} <Icon name="arrow" size={18}/></SmartLink>
                 <SmartLink href={content.heroSecondaryHref} className="button button-secondary">{content.heroSecondaryLabel}</SmartLink>
-                {siteMedia.activeCv ? <a href="/cv" className="button button-ghost" target="_blank" rel="noreferrer"><Icon name="download" size={17}/> Download CV</a> : null}
+                {siteMedia.activeCv ? <a href={siteMedia.activeCv.media.publicUrl} className="button button-ghost" target="_blank" rel="noreferrer"><Icon name="download" size={17}/> Download CV</a> : null}
               </div>
               <div className="hero-socials"><span>Connect</span><a href={githubUrl} target="_blank" rel="noreferrer" aria-label="GitHub"><Icon name="github"/></a><a href={linkedinUrl} target="_blank" rel="noreferrer" aria-label="LinkedIn"><Icon name="linkedin"/></a><a href={`mailto:${content.contactEmail}`} aria-label={`Email ${content.ownerName}`}><Icon name="mail"/></a></div>
             </div>

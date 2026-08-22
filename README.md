@@ -1,80 +1,149 @@
-# Saiful Islam Portfolio
+# SaifulShuvo Portfolio — WordPress + Static Next.js
 
-A mobile-responsive personal portfolio and single-owner CMS built with Next.js, TypeScript, Supabase and Netlify.
+**Release candidate:** `v1.0.0-rc.1`  
+**Architecture:** WordPress headless CMS/backend + Next.js static export + cPanel/Apache  
+**Source control:** GitHub
 
-## Current release
+This repository is the public frontend for `saifulshuvo.com`. The previous Supabase-backed Next.js CMS and Netlify runtime have been removed from the release-candidate codebase. Content is now read from the headless WordPress CMS at `cms.saifulshuvo.com` during `next build`, and browser-side actions are sent directly to purpose-built WordPress REST endpoints.
 
-**v0.9.0 — SEO, Analytics, Performance and Production Hardening**
-
-The site now includes database-managed SEO defaults, generated social artwork, structured data, dynamic robots and sitemap controls, optional consent-aware Google Analytics or Plausible loading, first-party page-view and Core Web Vitals telemetry, bounded client-error reporting, production security headers, health checks, accessibility improvements and retention controls.
-
-## Stack
-
-- Next.js 16 App Router and React 19
-- TypeScript
-- Node.js 24 LTS and pnpm 11
-- Supabase Auth, PostgreSQL, Storage and Row Level Security
-- Supabase SSR cookie sessions
-- Tiptap rich-text editor
-- Resend Email API for optional contact notifications
-- Optional Google Analytics 4 or Plausible Analytics
-- Netlify deployment
-
-## Local setup
-
-```powershell
-nvm install 24.18.1
-nvm use 24.18.1
-corepack enable
-corepack prepare pnpm@11.18.0 --activate
-pnpm install
-Copy-Item .env.example .env.local
-pnpm typecheck
-pnpm build
-pnpm dev
-```
-
-Apply migrations in order:
+## Final architecture
 
 ```text
-supabase/migrations/202607310001_cms_foundation.sql
-supabase/migrations/202607310002_project_cms.sql
-supabase/migrations/202607310003_blog_cms.sql
-supabase/migrations/202607310004_media_library.sql
-supabase/migrations/202607310005_profile_homepage_cms.sql
-supabase/migrations/202607310006_contact_inbox.sql
-supabase/migrations/202607310007_seo_analytics_hardening.sql
+GitHub
+  │ source control
+  ▼
+Next.js 16 source
+  │ build-time WPGraphQL reads
+  ▼
+next build → out/
+  │
+  ▼
+cPanel / Apache
+  │
+  ▼
+saifulshuvo.com
+
+Browser actions ───────────────┐
+                               ▼
+                    cms.saifulshuvo.com
+                    WordPress + ACF Pro
+                    WPGraphQL + WPGraphQL for ACF
+                    SaifulShuvo Core
+                    MySQL/MariaDB
 ```
 
-## Important routes
+Node.js is a **build tool only**. The production public site is static HTML/CSS/JS served by Apache. No permanent Next.js Node server is required.
+
+## WordPress dependencies
+
+The CMS should have these active:
+
+- Advanced Custom Fields PRO
+- WPGraphQL
+- WPGraphQL for ACF
+- SaifulShuvo Core `0.2.1+`
+- SaifulShuvo Headless theme
+
+The one-time migration importer is not needed by the public frontend after migration validation is complete.
+
+## Environment
+
+Copy `.env.example` to `.env.local` for development/builds.
+
+```env
+NEXT_PUBLIC_SITE_URL=https://saifulshuvo.com
+WORDPRESS_URL=https://cms.saifulshuvo.com
+WORDPRESS_GRAPHQL_URL=https://cms.saifulshuvo.com/graphql
+NEXT_PUBLIC_WORDPRESS_REST_URL=https://cms.saifulshuvo.com/wp-json/saifulshuvo/v1
+WORDPRESS_ALLOW_FALLBACK=false
+```
+
+## Commands
+
+```bash
+pnpm install --frozen-lockfile
+pnpm verify:wordpress
+pnpm audit:architecture
+pnpm typecheck
+pnpm build
+pnpm check:static
+```
+
+`pnpm build` creates `out/` and adds the cPanel/Apache `.htaccess` security and cache configuration.
+
+## Public routes
 
 ```text
 /
-/contact
-/cv
-/projects
-/blog
-/api/health
-/admin
-/admin/inbox
-/admin/homepage
-/admin/skills
-/admin/experience
-/admin/projects
-/admin/posts
-/admin/media
-/admin/settings
-/admin/seo
-/admin/analytics
+/projects/
+/projects/[slug]/
+/blog/
+/blog/[slug]/
+/blog/category/[slug]/
+/blog/tag/[slug]/
+/contact/
+/privacy/
+/robots.txt
+/sitemap.xml
 ```
 
-## Documentation
+All dynamic project/blog/taxonomy routes are generated at build time with `generateStaticParams()`.
 
-All documentation except this README is stored in [`docs/`](./docs/README.md).
+## Data access
 
-Start with:
+Build-time content reads live under:
 
-1. [`docs/UPGRADE-v0.9.0.md`](./docs/UPGRADE-v0.9.0.md)
-2. [`docs/SEO-ANALYTICS-HARDENING.md`](./docs/SEO-ANALYTICS-HARDENING.md)
-3. [`docs/PRODUCTION-CHECKLIST.md`](./docs/PRODUCTION-CHECKLIST.md)
-4. [`docs/RELEASE-NOTES-v0.9.0.md`](./docs/RELEASE-NOTES-v0.9.0.md)
+```text
+src/lib/wordpress/
+├── client.ts
+├── env.ts
+├── helpers.ts
+├── media-mapper.ts
+├── rest.ts
+└── queries/
+    ├── media.ts
+    ├── posts.ts
+    ├── profile.ts
+    ├── projects.ts
+    ├── seo.ts
+    └── site-settings.ts
+```
+
+Browser-side writes:
+
+```text
+POST /wp-json/saifulshuvo/v1/contact
+POST /wp-json/saifulshuvo/v1/analytics
+POST /wp-json/saifulshuvo/v1/web-vitals
+POST /wp-json/saifulshuvo/v1/errors
+```
+
+## Removed from the frontend
+
+The release-candidate codebase no longer contains:
+
+- Supabase client/server/auth layer
+- Supabase migrations
+- Next.js `/admin` CMS
+- Next.js `/auth` routes
+- Next.js API route handlers
+- Server Actions
+- Tiptap admin editor dependencies
+- Netlify configuration
+- `/cv` server redirect route
+- runtime `headers()` configuration
+
+The CMS is WordPress `/wp-admin`. CV/profile media is referenced directly from the WordPress Media Library.
+
+## Deployment
+
+Do not deploy directly to the production domain first. Build and upload `out/` to a preview/staging document root, perform full QA, then cut over `saifulshuvo.com`.
+
+See:
+
+- [`docs/DEVELOPMENT-SUMMARY.md`](docs/DEVELOPMENT-SUMMARY.md)
+- [`docs/CONTINUATION-ROADMAP.md`](docs/CONTINUATION-ROADMAP.md)
+- [`docs/CPANEL-STATIC-DEPLOYMENT.md`](docs/CPANEL-STATIC-DEPLOYMENT.md)
+- [`docs/WORDPRESS-CONTRACT.md`](docs/WORDPRESS-CONTRACT.md)
+
+Historical Supabase-era documents were preserved under `docs/legacy-supabase-v0.9.0/` for reference only and do **not** describe the current architecture.

@@ -1063,8 +1063,9 @@ html[data-theme="light"] .checkbox-row strong { color: #17273e; }
 .blog-empty-state h2 { margin: 14px 0 5px; }
 .blog-empty-state p { margin: 0 0 18px; color: var(--muted); }
 .blog-pagination { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); }
-.blog-pagination a { color: var(--cyan); font-size: .72rem; font-weight: 750; }
-.blog-pagination a:last-child { justify-self: end; }
+.blog-pagination a, .blog-pagination button { color: var(--cyan); font-size: .72rem; font-weight: 750; }
+.blog-pagination button { appearance: none; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; }
+.blog-pagination a:last-child, .blog-pagination button:last-child { justify-self: end; }
 .blog-pagination > span:nth-child(2) { color: var(--muted); font-size: .68rem; }
 .home-blog-grid { margin-top: 8px; }
 .insights-section { background: linear-gradient(180deg, transparent, rgba(11,23,43,.46), transparent); }
@@ -1538,7 +1539,7 @@ html[data-theme="light"] .notification-error-notice { color: #9f1239; }
   .admin-pagination { justify-content: space-between; }
 }
 
-/* v0.9.0 — SEO, analytics, accessibility and production hardening */
+/* WordPress static frontend — analytics, accessibility and production hardening */
 .skip-link {
   position: fixed;
   z-index: 10000;

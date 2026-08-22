@@ -1,44 +1,106 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useFormStatus } from "react-dom";
-import { submitContactAction } from "@/app/contact/actions";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
+import { postWordPressRest } from "@/lib/wordpress/rest";
 import type { ContactFormState } from "@/types/contact";
 
 const initialState: ContactFormState = { status: "idle", message: "" };
-
-function ContactSubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button className="button button-primary" type="submit" disabled={pending} aria-disabled={pending}>
-      {pending ? "Sending…" : <>Send message <Icon name="arrow" size={18} /></>}
-    </button>
-  );
-}
 
 function FieldError({ message }: { message?: string }) {
   return message ? <small className="field-error">{message}</small> : null;
 }
 
+function value(formData: FormData, key: string): string {
+  const candidate = formData.get(key);
+  return typeof candidate === "string" ? candidate.trim() : "";
+}
+
+function validate(formData: FormData): { state?: ContactFormState; payload: Record<string, string | number> } {
+  const fullName = value(formData, "full_name");
+  const email = value(formData, "email").toLowerCase();
+  const company = value(formData, "company");
+  const subject = value(formData, "subject");
+  const interest = value(formData, "interest");
+  const message = value(formData, "message");
+  const sourcePage = value(formData, "source_page") || "/contact";
+  const website = value(formData, "website");
+  const startedAt = Number(value(formData, "started_at"));
+
+  const fieldErrors: ContactFormState["fieldErrors"] = {};
+  if (fullName.length < 2 || fullName.length > 120) fieldErrors.fullName = "Enter your full name.";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) fieldErrors.email = "Enter a valid email address.";
+  if (subject.length < 3 || subject.length > 180) fieldErrors.subject = "Add a short, useful subject.";
+  if (!interest) fieldErrors.interest = "Select what you would like to discuss.";
+  if (message.length < 20 || message.length > 5000) fieldErrors.message = "Write a message between 20 and 5000 characters.";
+
+  const payload = {
+    full_name: fullName,
+    email,
+    company,
+    subject,
+    interest,
+    message,
+    source_page: sourcePage,
+    website,
+    started_at: Number.isFinite(startedAt) ? startedAt : Date.now(),
+  };
+
+  if (website || company.length > 160) {
+    return { payload, state: { status: "error", message: "Unable to accept this submission." } };
+  }
+  if (Number.isFinite(startedAt) && Date.now() - startedAt < 1_500) {
+    return { payload, state: { status: "error", message: "Please take a moment to review your message and try again." } };
+  }
+  if (Object.keys(fieldErrors).length) {
+    return { payload, state: { status: "error", message: "Please review the highlighted fields.", fieldErrors } };
+  }
+  return { payload };
+}
+
 export function ContactForm() {
-  const [state, formAction] = useActionState(submitContactAction, initialState);
+  const [state, setState] = useState<ContactFormState>(initialState);
+  const [pending, setPending] = useState(false);
   const formRef = useRef<HTMLFormElement | null>(null);
   const startedAtRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (startedAtRef.current && !startedAtRef.current.value) {
-      startedAtRef.current.value = String(Date.now());
+    if (startedAtRef.current) startedAtRef.current.value = String(Date.now());
+  }, []);
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (pending) return;
+    const formData = new FormData(event.currentTarget);
+    const validation = validate(formData);
+    if (validation.state) {
+      setState(validation.state);
+      return;
     }
-    if (state.status === "success") {
+
+    setPending(true);
+    setState({ status: "idle", message: "" });
+    try {
+      const result = await postWordPressRest<{ ok?: boolean; message?: string }>("/contact", validation.payload);
+      setState({
+        status: "success",
+        message: result.message || "Thank you. Your message has been received and saved securely.",
+      });
       formRef.current?.reset();
       if (startedAtRef.current) startedAtRef.current.value = String(Date.now());
+    } catch (error) {
+      setState({
+        status: "error",
+        message: error instanceof Error ? error.message : "Your message could not be submitted. Please try again or contact me by email.",
+      });
+    } finally {
+      setPending(false);
     }
-  }, [state.status]);
+  }
 
   return (
-    <form ref={formRef} action={formAction} className="contact-form">
+    <form ref={formRef} onSubmit={onSubmit} className="contact-form">
       <input type="hidden" name="source_page" value="/contact" />
       <input ref={startedAtRef} type="hidden" name="started_at" defaultValue="" />
       <label className="contact-honeypot" aria-hidden="true">
@@ -99,8 +161,10 @@ export function ContactForm() {
         </div>
       ) : null}
 
-      <ContactSubmitButton />
-      <p className="form-note">Your message is stored in the private portfolio inbox. No raw IP address is retained. See the <Link href="/privacy">privacy notice</Link>.</p>
+      <button className="button button-primary" type="submit" disabled={pending} aria-disabled={pending}>
+        {pending ? "Sending…" : <>Send message <Icon name="arrow" size={18} /></>}
+      </button>
+      <p className="form-note">Your message is stored in the private WordPress contact inbox. No raw IP address is retained. See the <Link href="/privacy">privacy notice</Link>.</p>
     </form>
   );
 }

@@ -3,11 +3,12 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { getPublicProjects } from "@/lib/projects/queries";
+import { getPublicProjects } from "@/lib/wordpress/queries/projects";
 
 export const metadata: Metadata = {
   title: "Projects",
   description: "Analytics, AI, SaaS and web application projects by Saiful Islam.",
+  alternates: { canonical: "/projects" },
 };
 
 export default async function ProjectsPage() {
