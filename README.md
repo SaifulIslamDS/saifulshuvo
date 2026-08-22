@@ -1,48 +1,25 @@
-# SaifulShuvo Static Prerender Window Guard Patch v1.0.0-rc.5
+# SaifulShuvo cPanel Deploy Runner Fix v1.0.1
 
-## Purpose
+This patch hardens the cPanel deployment runner after the first deployment attempt produced no usable custom log and cPanel continued to show no successful deployment.
 
-Fixes the Next.js static-export prerender failure:
+Changes:
 
-`ReferenceError: window is not defined`
-
-observed while prerendering blog category pages.
-
-## Root cause
-
-Modern Node.js exposes a global `navigator`, so this client component expression could evaluate the `window` branch during server prerendering:
-
-```ts
-navigator.doNotTrack === "1" || window.doNotTrack === "1"
-```
-
-`window` does not exist during static prerendering.
-
-## Change
-
-Updates only:
-
-`src/components/AnalyticsManager.tsx`
-
-The Do Not Track check now independently guards both `navigator` and `window`.
+- Uses absolute cPanel account/repository paths in `.cpanel.yml`.
+- Adds a bootstrap runner log at `~/.saifulshuvo-deploy/cpanel-runner.log`.
+- Removes Bash process substitution (`tee >(...)`) from the deployment script and uses simple append redirection, which is safer in restricted cPanel task-runner environments.
+- Adds line/command-aware failure logging.
+- Logs Node/npm/npx discovery before building.
+- Keeps the fail-safe behavior: `public_html` is only replaced after WordPress verification, architecture audit, typecheck, build, and static-output validation all pass.
+- Preserves `.well-known/` and `cgi-bin/`.
 
 ## Apply
 
-Extract this ZIP over the repository root and replace the existing file.
+Copy `.cpanel.yml` and `scripts/cpanel-build-deploy.sh` over the existing files, commit, and push to `main`. In cPanel Git Version Control choose **Update from Remote**, then **Deploy HEAD Commit**.
 
-Then run:
+If deployment still fails, inspect:
 
-```powershell
-pnpm audit:architecture
-pnpm typecheck
-pnpm build
-```
+1. `/home2/saifulsh/.saifulshuvo-deploy/cpanel-runner.log`
+2. `/home2/saifulsh/.saifulshuvo-deploy/logs/deploy-YYYYMMDD.log`
+3. cPanel's native deployment log under `/home2/saifulsh/.cpanel/logs/vc_*_git_deploy.log`
 
-Only if `pnpm build` succeeds:
-
-```powershell
-pnpm check:static
-Get-ChildItem -Force .\out
-```
-
-Do not restore Supabase/Tiptap/admin code and do not run `pnpm check:static` before a successful build.
+Do not enable the cron job until one manual deployment completes successfully.

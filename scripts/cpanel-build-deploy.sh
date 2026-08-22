@@ -1,10 +1,11 @@
 #!/bin/bash
 set -Eeuo pipefail
+umask 077
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-HOME_ROOT="${HOME:-/home2/saifulsh}"
-DEPLOY_ROOT="${HOME_ROOT}/public_html"
-STATE_DIR="${HOME_ROOT}/.saifulshuvo-deploy"
+ACCOUNT_HOME="/home2/saifulsh"
+REPO_ROOT="/home2/saifulsh/repositories/saifulshuvo"
+DEPLOY_ROOT="/home2/saifulsh/public_html"
+STATE_DIR="${ACCOUNT_HOME}/.saifulshuvo-deploy"
 LOCK_DIR="${STATE_DIR}/lock"
 LOG_DIR="${STATE_DIR}/logs"
 LAST_GIT_FILE="${STATE_DIR}/last-git-commit"
@@ -14,13 +15,34 @@ PNPM_VERSION="11.18.0"
 
 mkdir -p "$STATE_DIR" "$LOG_DIR"
 LOG_FILE="${LOG_DIR}/deploy-$(date -u +%Y%m%d).log"
-exec > >(tee -a "$LOG_FILE") 2>&1
+# Use plain append redirection. Avoid Bash process substitution/tee because
+# cPanel's restricted task runner may not expose /dev/fd consistently.
+exec >>"$LOG_FILE" 2>&1
 
+on_error() {
+  local rc=$?
+  local line="${1:-unknown}"
+  local cmd="${2:-unknown}"
+  echo "ERROR: deployment failed (exit=$rc line=$line command=$cmd)"
+  echo "Finished: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  exit "$rc"
+}
+trap 'on_error "$LINENO" "$BASH_COMMAND"' ERR
+
+echo
 echo "=== SaifulShuvo cPanel deployment $(date -u +%Y-%m-%dT%H:%M:%SZ) ==="
+echo "User: $(id -un 2>/dev/null || true)"
+echo "HOME: ${HOME:-unset}"
 echo "Repository: $REPO_ROOT"
 echo "Deploy root: $DEPLOY_ROOT"
+echo "PATH (initial): ${PATH:-unset}"
 
-if [[ "$DEPLOY_ROOT" != "$HOME_ROOT/public_html" || "$DEPLOY_ROOT" == "/" || -z "$DEPLOY_ROOT" ]]; then
+if [[ ! -d "$REPO_ROOT/.git" ]]; then
+  echo "Repository not found or not a Git working tree: $REPO_ROOT" >&2
+  exit 1
+fi
+
+if [[ "$DEPLOY_ROOT" != "/home2/saifulsh/public_html" || "$DEPLOY_ROOT" == "/" || -z "$DEPLOY_ROOT" ]]; then
   echo "Refusing unsafe deployment root: $DEPLOY_ROOT" >&2
   exit 1
 fi
@@ -31,11 +53,10 @@ if ! mkdir "$LOCK_DIR" 2>/dev/null; then
 fi
 trap 'rm -rf "$LOCK_DIR"' EXIT
 
-# Locate CloudLinux Node.js 20 without requiring an interactive shell/Node app.
 NODE_DIR=""
 for candidate in \
-  /opt/alt/alt-nodejs20/root/bin \
-  /opt/alt/alt-nodejs20/root/usr/bin; do
+  /opt/alt/alt-nodejs20/root/usr/bin \
+  /opt/alt/alt-nodejs20/root/bin; do
   if [[ -x "$candidate/node" ]]; then
     NODE_DIR="$candidate"
     break
@@ -49,20 +70,24 @@ if [[ -z "$NODE_DIR" ]]; then
   fi
 fi
 
-if [[ -z "$NODE_DIR" ]]; then
-  echo "Node.js executable not found. The hosting provider must expose CloudLinux Node.js 20 to deployment tasks." >&2
+if [[ -z "$NODE_DIR" || ! -x "$NODE_DIR/node" ]]; then
+  echo "Node.js executable not found. Checked CloudLinux Node.js 20 paths and PATH." >&2
   exit 1
 fi
 
 export PATH="$NODE_DIR:$PATH"
+export npm_config_engine_strict=false
+export COREPACK_ENABLE_STRICT=0
 NODE_BIN="$NODE_DIR/node"
 NPM_BIN="$(command -v npm 2>/dev/null || true)"
 NPX_BIN="$(command -v npx 2>/dev/null || true)"
 
 echo "Node: $($NODE_BIN -v) ($NODE_BIN)"
+echo "npm: ${NPM_BIN:-not-found}"
+echo "npx: ${NPX_BIN:-not-found}"
 
 if [[ -z "$NPX_BIN" && -z "$NPM_BIN" ]]; then
-  echo "Neither npx nor npm is available beside Node.js." >&2
+  echo "Neither npx nor npm is available with Node.js." >&2
   exit 1
 fi
 
@@ -76,7 +101,7 @@ if [[ -z "$CURL_BIN" ]]; then
   exit 1
 fi
 
-VERSION_JSON="$($CURL_BIN -fsS --connect-timeout 10 --max-time 20 \
+VERSION_JSON="$($CURL_BIN -fsS --retry 2 --retry-delay 1 --connect-timeout 10 --max-time 20 \
   -H 'Accept: application/json' \
   -H 'Cache-Control: no-cache' \
   "$CONTENT_VERSION_URL")"
@@ -90,7 +115,7 @@ process.stdin.on("end", () => {
     const version = Number(parsed.contentVersion);
     if (!Number.isFinite(version) || version < 1) process.exit(2);
     process.stdout.write(String(Math.trunc(version)));
-  } catch (error) {
+  } catch (_) {
     process.exit(1);
   }
 });
@@ -105,7 +130,6 @@ if [[ "$CURRENT_GIT" == "$LAST_GIT" && "$CURRENT_CONTENT" == "$LAST_CONTENT" ]];
   exit 0
 fi
 
-# Build-time environment for the static Next.js export.
 export NEXT_PUBLIC_SITE_URL="https://saifulshuvo.com"
 export WORDPRESS_URL="https://cms.saifulshuvo.com"
 export WORDPRESS_GRAPHQL_URL="https://cms.saifulshuvo.com/graphql"
@@ -145,10 +169,9 @@ if [[ ! -f "$REPO_ROOT/out/index.html" || ! -f "$REPO_ROOT/out/.htaccess" ]]; th
 fi
 
 mkdir -p "$DEPLOY_ROOT"
-
 RSYNC_BIN="$(command -v rsync 2>/dev/null || true)"
 if [[ -n "$RSYNC_BIN" ]]; then
-  echo "Deploying with rsync..."
+  echo "Deploying with rsync: $RSYNC_BIN"
   "$RSYNC_BIN" -a --delete \
     --exclude='.well-known/' \
     --exclude='cgi-bin/' \
@@ -169,3 +192,4 @@ echo "Deployment successful."
 echo "Live: https://saifulshuvo.com"
 echo "Recorded Git commit: $CURRENT_GIT"
 echo "Recorded CMS content version: $CURRENT_CONTENT"
+echo "Finished: $(date -u +%Y-%m-%dT%H:%M:%SZ)"

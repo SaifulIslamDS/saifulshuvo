@@ -1,4 +1,6 @@
 ---
 deployment:
   tasks:
-    - /bin/bash scripts/cpanel-build-deploy.sh
+    - /bin/mkdir -p /home2/saifulsh/.saifulshuvo-deploy/logs
+    - /bin/touch /home2/saifulsh/.saifulshuvo-deploy/cpanel-runner.log
+    - /bin/bash /home2/saifulsh/repositories/saifulshuvo/scripts/cpanel-build-deploy.sh >> /home2/saifulsh/.saifulshuvo-deploy/cpanel-runner.log 2>&1
